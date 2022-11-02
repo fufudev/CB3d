@@ -191,12 +191,12 @@ void	init_coordinates_vertical(t_data *data, double *xa, double *ax)
 	if (data->player_angle > 90 && data->player_angle < 270)
 	{
 		*xa = -64;
-		*ax = floor(data->player_y / 64) * (64) - 1;
+		*ax = floor(data->player_x / 64) * (64) - 1;
 	}
 	else
 	{
 		*xa = 64;
-		*ax = floor(data->player_y / 64) * (64) + 64;
+		*ax = floor(data->player_x / 64) * (64) + 64;
 	}
 }
 
@@ -222,6 +222,7 @@ void	find_horizontal_intersection(t_data *data)
 		ay = ty;
 		ax = tx;
 	}
+	printf("Horizontal check :\n(%0.f, %0.f)\n", floor(tx / 64), floor(ty / 64));
 }
 
 void	find_vertical_intersection(t_data *data)
@@ -236,17 +237,17 @@ void	find_vertical_intersection(t_data *data)
 	ty = floor(data->player_y);
 	tx = floor(data->player_x);
 	data->player_angle = 60.0;
-	ya = floor(64 / tan(degree_to_radian(60)));
-	init_coordinates_vertical(data, &ya, &ay);
+	ya = floor(64 * tan(degree_to_radian(data->player_angle)));
+	init_coordinates_vertical(data, &xa, &ax);
 	while (data->s_map[(int)floor(ty / 64)][(int)floor(tx / 64)] != '1')
 	{
-		ay = floor(data->player_y + (data->player_x - ax) / tan(degree_to_radian(60)));
-		ty = ay + ya;
+		ay = floor(data->player_y + (data->player_x - ax) * tan(degree_to_radian(data->player_angle)));
+		ty = ay - ya; // ICI FORCEMENT ON DOIT MONTER DONC Y BAISSE C EVIDENT BORDEL !!!!
 		tx = ax + xa;
 		ay = ty;
 		ax = tx;
 	}
-	printf("ty : %f tx : %f\n", floor(ty / 64), floor(tx / 64));
+	printf("Vertical check :\n(%0.f, %0.f)\n", floor(tx / 64), floor(ty / 64));
 }
 /*void	event(t_data *data)
 {
