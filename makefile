@@ -6,7 +6,8 @@ NAME = cub3d
 #I_DIR = /usr/include -lXext -lX11 -lm -lz
 I_DIR = include
 L_FT = libft
-
+#MLX = mlx_linux
+MLX = mlx
 SRC =	parsing/parsing.c	    	\
 		main.c			        	\
 		parsing/utils.c				\
@@ -23,7 +24,7 @@ OBJ = $(SRC:%.c=%.o)
 all: cub3d.h $(NAME)
 
 $(NAME): $(L_FT)/libft.a $(OBJ)
-		$(CC) $(LDFLAG) $(CFLAGS) $(OBJ) -I$(I_DIR) -L$(L_FT) libft/libft.a mlx_linux/libmlx.a -o $(NAME)
+		$(CC) $(LDFLAG) $(CFLAGS) $(OBJ) -I$(I_DIR) -L$(L_FT) libft/libft.a $(MLX)/libmlx.a -o $(NAME)
 
 $(L_FT)/libft.a:
 	make -C $(L_FT) 
