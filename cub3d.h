@@ -55,7 +55,7 @@ typedef	struct s_data
 	void	*mlx_ptr;
 	void	*win_ptr;
 	void	*img;
-	int		*addr;
+	char	*addr;
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;

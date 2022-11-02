@@ -6,7 +6,7 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 10:49:24 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/02 14:55:57 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/02 15:00:18 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ int	ft_check_middle(int i, int j, char **map, t_data *data)
 
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
-	int	*dst;
+	char	*dst;
 
 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	*(unsigned int*)dst = color;
+	*(unsigned int *)dst = color;
 }
 
 void	draw_rect(t_data *data, int x, int y, int color)
@@ -76,7 +76,7 @@ void	init_img(t_data *data)
 	int	null;
 
 	data->img = mlx_new_image(data->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT);
-	data->addr = (int *)mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
+	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
 }
 
 void	draw_player(t_data *data, int py, int px, int color)
@@ -138,7 +138,7 @@ void	window(t_data *data)
 	if (!data->win_ptr)
 		ft_msg_free(data->map, "Error\nPB WINDOWS\n");
 	data->img = mlx_new_image(data->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT);
-	data->addr = (int *)mlx_get_data_addr(data->img, NULL, NULL, NULL);
+	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
 	my_mlx_pixel_put(data, 5, 5, 0x00FF0000);
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img, 0, 0);
 }
