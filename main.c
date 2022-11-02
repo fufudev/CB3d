@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffiliz <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 10:49:24 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/10/10 15:53:41 by ffiliz           ###   ########.fr       */
+/*   Updated: 2022/11/02 14:55:57 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,24 @@ void	init_img(t_data *data)
 	int	null;
 
 	data->img = mlx_new_image(data->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT);
-	data->addr = (int *)mlx_get_data_addr(data->img, &null, &null, &null);
+	data->addr = (int *)mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
+}
+
+void	draw_player(t_data *data, int py, int px, int color)
+{
+	int i;
+	int j;
+
+	i = py;
+
+	while (i <= py)
+	{
+		j = px;
+		while (j <= px)
+			if (data->win_ptr != NULL)
+				my_mlx_pixel_put(data, j++, i, color);
+		i++;
+	}
 }
 
 void	draw_map(char **map, t_data *data)
@@ -133,9 +150,9 @@ void	window(t_data *data)
 
 void	start_display(t_data *data)
 {
-	init_value_pos(data);
+	//init_value_pos(data);
 	window(data);
-
+	mlx_loop(data->mlx_ptr);
 	//event(data);
 }
 
@@ -156,23 +173,6 @@ int	main(int argc, char **argv)
 	mlx_loop_hook(data->mlx_ptr, draw_again, data);
 	mlx_loop(data->mlx_ptr);
 }
+*/
 
 
-
-
-void	draw_player(t_data *data, int py, int px, int color)
-{
-	int i;
-	int j;
-
-	i = py;
-
-	while (i <= py)
-	{
-		j = px;
-		while (j <= px)
-			if (data->win_ptr != NULL)
-				put_pxl(data, j++, i, color);
-		i++;
-	}
-}*/

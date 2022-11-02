@@ -21,7 +21,7 @@ OBJ = $(SRC:%.c=%.o)
 all: cub3d.h $(NAME)
 
 $(NAME): $(L_FT)/libft.a $(OBJ)
-		$(CC) $(CFLAGS) $(OBJ) -I$(I_DIR) -L$(L_FT) libft/libft.a mlx/libmlx.a -o $(NAME)
+		$(CC) $(LDFLAG) $(CFLAGS) $(OBJ) -I$(I_DIR) -L$(L_FT) libft/libft.a mlx/libmlx.a -o $(NAME)
 
 $(L_FT)/libft.a:
 	make -C $(L_FT) 
