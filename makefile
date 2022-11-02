@@ -1,27 +1,29 @@
 CC	= gcc
 CFLAGS = -Wall -Werror -Wextra -g -fsanitize=address
-LDFLAG = -Lmlx -framework OpenGL -framework AppKit 
+LDFLAG = -Lmlx -framework OpenGL -framework AppKit
+#LDFLAG = -Lmlx_linux
 NAME = cub3d
+#I_DIR = /usr/include -lXext -lX11 -lm -lz
 I_DIR = include
 L_FT = libft
 
-SRC =	parsing.c		\
-		main.c			\
-		utils.c			\
-		utils2.c		\
-		ft_check.c		\
-		map.c			\
-		ft_id_check.c	\
-		ft_id_check_2.c	\
-		ft_path_check.c \
-		ft_init.c		\
+SRC =	parsing/parsing.c	    	\
+		main.c			        	\
+		parsing/utils.c				\
+		parsing/utils2.c			\
+		parsing/ft_check.c			\
+		parsing/map.c				\
+		parsing/ft_id_check.c		\
+		parsing/ft_id_check_2.c		\
+		parsing/ft_path_check.c		\
+		ft_init.c					\
 
 OBJ = $(SRC:%.c=%.o)
 
 all: cub3d.h $(NAME)
 
 $(NAME): $(L_FT)/libft.a $(OBJ)
-		$(CC) $(LDFLAG) $(CFLAGS) $(OBJ) -I$(I_DIR) -L$(L_FT) libft/libft.a mlx/libmlx.a -o $(NAME)
+		$(CC) $(LDFLAG) $(CFLAGS) $(OBJ) -I$(I_DIR) -L$(L_FT) libft/libft.a mlx_linux/libmlx.a -o $(NAME)
 
 $(L_FT)/libft.a:
 	make -C $(L_FT) 
