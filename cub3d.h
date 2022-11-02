@@ -115,8 +115,11 @@ void	escape(t_data *data);
 void	quit(t_data *data);
 int		closewd(t_data *data);
 void	init_value_pos(t_data *data);
-float	degree_to_radian(float degree);
+double	degree_to_radian(double degree);
 int		draw_again(t_data *data);
 void	finding_wall(t_data *data);
+void	find_horizontal_intersection(t_data *data);
+void	find_vertical_intersection(t_data *data);
+
 
 #endif

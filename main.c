@@ -6,7 +6,7 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 10:49:24 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/02 15:00:18 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/02 17:20:01 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,21 +113,20 @@ void	draw_map(char **map, t_data *data)
 				{
 					if (data->win_ptr != NULL)
 					{
-						draw_rect(data, j * 64, i * 64, 0x0000FF);
+						draw_rect(data, j * 64, i * 64, 0xFFFFFF);
 						draw_player(data, data->player_y, data->player_x, 0xFF0000);
 					}
 				}
 				else if (map[i][j] == '1')
 				{
-					draw_rect(data, j * 64, i * 64, 0xFFFFFF);
+					draw_rect(data, j * 64, i * 64, 0x0000FF);
 					draw_player(data, data->player_y, data->player_x, 0xFF0000);
 				}
 			}
 			else
-				draw_rect(data, j * 64, i * 64, 0x0000FF);
+				draw_rect(data, j * 64, i * 64, 0xFFFFFF);
 		}
 	}
-	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img, 0, 0);
 }
 
 
@@ -139,7 +138,7 @@ void	window(t_data *data)
 		ft_msg_free(data->map, "Error\nPB WINDOWS\n");
 	data->img = mlx_new_image(data->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
-	my_mlx_pixel_put(data, 5, 5, 0x00FF0000);
+	draw_map(data->s_map, data);
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img, 0, 0);
 }
 
@@ -152,6 +151,8 @@ void	start_display(t_data *data)
 {
 	//init_value_pos(data);
 	window(data);
+	find_horizontal_intersection(data);
+	find_vertical_intersection(data);
 	mlx_loop(data->mlx_ptr);
 	//event(data);
 }
@@ -166,6 +167,87 @@ int	main(int argc, char **argv)
 	return (0);
 }
 
+double	degree_to_radian(double r)
+{	
+	return(r * 3.14 / 180);
+}
+
+void	init_coordinates_horizontal(t_data *data, double *ya, double *ay)
+{
+	if (data->player_angle > 0 && data->player_angle < 180)
+	{
+		*ya = -64;
+		*ay = floor(data->player_y / 64) * (64) - 1;
+	}
+	else
+	{
+		*ya = 64;
+		*ay = floor(data->player_y / 64) * (64) + 64;
+	}
+}
+
+void	init_coordinates_vertical(t_data *data, double *xa, double *ax)
+{
+	if (data->player_angle > 90 && data->player_angle < 270)
+	{
+		*xa = -64;
+		*ax = floor(data->player_y / 64) * (64) - 1;
+	}
+	else
+	{
+		*xa = 64;
+		*ax = floor(data->player_y / 64) * (64) + 64;
+	}
+}
+
+void	find_horizontal_intersection(t_data *data)
+{
+	double	xa;
+	double	ya;
+	double	ay;
+	double	ax;
+	double	tx;
+	double	ty;
+
+	ty = floor(data->player_y);
+	tx = floor(data->player_x);
+	data->player_angle = 60.0;
+	xa = floor(64 / tan(degree_to_radian(60)));
+	init_coordinates_horizontal(data, &ya, &ay);
+	while (data->s_map[(int)floor(ty / 64)][(int)floor(tx / 64)] != '1')
+	{
+		ax = floor(data->player_x + (data->player_y - ay) / tan(degree_to_radian(60)));
+		ty = ay + ya;
+		tx = ax + xa;
+		ay = ty;
+		ax = tx;
+	}
+}
+
+void	find_vertical_intersection(t_data *data)
+{
+	double	xa;
+	double	ya;
+	double	ay;
+	double	ax;
+	double	tx;
+	double	ty;
+
+	ty = floor(data->player_y);
+	tx = floor(data->player_x);
+	data->player_angle = 60.0;
+	ya = floor(64 / tan(degree_to_radian(60)));
+	init_coordinates_vertical(data, &ya, &ay);
+	while (data->s_map[(int)floor(ty / 64)][(int)floor(tx / 64)] != '1')
+	{
+		ay = floor(data->player_y + (data->player_x - ax) / tan(degree_to_radian(60)));
+		ty = ay + ya;
+		tx = ax + xa;
+		ay = ty;
+		ax = tx;
+	}
+	printf("ty : %f tx : %f\n", floor(ty / 64), floor(tx / 64));
+}
 /*void	event(t_data *data)
 {
 	mlx_hook(data->win_ptr, 2, 0, key_hook, data);
