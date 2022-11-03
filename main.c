@@ -6,7 +6,7 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 10:49:24 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/02 17:20:01 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/03 16:52:49 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,12 +149,12 @@ double	degree_to_radian(double r)
 
 void	init_coordinates_horizontal(t_data *data, double *ya, double *ay)
 {
-	if (data->player_angle > 0 && data->player_angle < 180)
+	if (data->player_angle >= 0 && data->player_angle <= 180)
 	{
 		*ya = -64;
 		*ay = floor(data->player_y / 64) * (64) - 1;
 	}
-	else
+	if (data->player_angle > 180 && data->player_angle <= 360)
 	{
 		*ya = 64;
 		*ay = floor(data->player_y / 64) * (64) + 64;
@@ -163,15 +163,15 @@ void	init_coordinates_horizontal(t_data *data, double *ya, double *ay)
 
 void	init_coordinates_vertical(t_data *data, double *xa, double *ax)
 {
+	if ((data->player_angle >= 0 && data->player_angle <= 90) || (data->player_angle >= 270 && data->player_angle <= 360))
+	{
+		*xa = 64;
+		*ax = floor(data->player_x / 64) * (64) + 64;;
+	}
 	if (data->player_angle > 90 && data->player_angle < 270)
 	{
 		*xa = -64;
 		*ax = floor(data->player_x / 64) * (64) - 1;
-	}
-	else
-	{
-		*xa = 64;
-		*ax = floor(data->player_x / 64) * (64) + 64;
 	}
 }
 
@@ -214,11 +214,11 @@ void	find_horizontal_intersection(t_data *data)
 		data->hz.ax = data->hz.tx;
 		if (!(floor(data->hz.tx / 64) > 0 && floor(data->hz.tx / 64) < len)) //ICI check xa
 		{
-			data->hz.ty = 100000;
-			data->hz.tx = 100000;
+			data->hz.ty = data->player_y;
+			data->hz.tx = data->player_x;
 			break ;
 		}
-		printf("\nHorizontal - Ty : %f Tx : %f\n", data->hz.ty, data->hz.tx);
+		//printf("\nHorizontal - Ty : %f Tx : %f\n", data->hz.ty, data->hz.tx);
 
 	}
 	printf("\nHorizontal check :\n(%0.f, %0.f)\n", floor(data->hz.tx / 64), floor(data->hz.ty / 64));
@@ -230,41 +230,41 @@ void	find_vertical_intersection(t_data *data)
 	data->vt.tx = floor(data->player_x);
 	data->vt.ya = floor(64 * tan(degree_to_radian(data->player_angle)));
 	init_coordinates_vertical(data, &data->vt.xa, &data->vt.ax);
-	while (data->s_map[(int)floor(data->vt.ty / 64)][(int)floor(data->vt.tx / 64)] != '1' && data->vt.ya != -1)
+	while (data->s_map[(int)floor(data->vt.ty / 64)][(int)floor(data->vt.tx / 64)] != '1')
 	{
-		data->vt.ay = floor(data->player_y + (data->player_x - data->vt.ax) *
-						 tan(degree_to_radian(data->player_angle)));
+		data->vt.ay = floor(data->player_y + (data->player_x - data->vt.ax)
+							* tan(degree_to_radian(data->player_angle)));
 		data->vt.ty = data->vt.ay - data->vt.ya;
 		data->vt.tx = data->vt.ax + data->vt.xa;
 		data->vt.ay = data->vt.ty;
 		data->vt.ax = data->vt.tx;
-		if (!(floor(data->vt.ty / 64) > 0 && floor(data->vt.ty / 64) < ft_strlen2d(data->s_map) - 1)) //ICI check ya
+		printf("tx : %f, ty : %f\n", data->vt.tx, data->vt.ty);
+		if (!(floor(data->vt.ty / 64) >= 0 && floor(data->vt.ty / 64) < ft_strlen2d(data->s_map) - 1))
 		{
-			data->vt.ty = 100000;
-			data->vt.tx = 100000;
+			data->vt.ty = data->player_y;
+			data->vt.tx = data->player_x;
 			break ;
 		}
-		printf("\nVertical - Ty : %f Tx : %f\n", data->vt.ty, data->vt.tx);
+		//printf("\nVertical - Ty : %f Tx : %f\n", data->vt.ty, data->vt.tx);
 	}
 	printf("\nVertical check :\n(%0.f, %0.f)\n", floor(data->vt.tx / 64), floor(data->vt.ty / 64));
 }
 
 void	draw_rayon(t_data *data, double wall_x, double wall_y)
 {
-	double	m;
 	int		steps;
 	int		i;
 	double	x;
 	double	y;
 
-	m = wall_y - data->player_y / wall_x - data->player_x;
-	if (wall_x - data->player_x > wall_y - data->player_y)
+	if (fabs(wall_x - data->player_x) > fabs(wall_y - data->player_y))
 		steps = fabs(wall_x - data->player_x);
 	else
 		steps = fabs(wall_y - data->player_y);
 	i = 1;
 	x = data->player_x;
 	y = data->player_y;
+	printf("Steps : %d x : %f y : %f dx : %f dy : %f\n", steps, wall_x, wall_y, wall_x - data->player_x, wall_y - data->player_y);
 	while (i <= steps)
 	{
 		my_mlx_pixel_put(data, floor(x), floor(y), 0xFF0000);
@@ -276,15 +276,27 @@ void	draw_rayon(t_data *data, double wall_x, double wall_y)
 
 void	find_distance(t_data *data)
 {
-	double pd;
-	double pe;
+	double dist_hz;
+	double dist_vt;
 		
-	pd = sqrt(pow(data->player_x - data->hz.tx, 2) + pow(data->player_y - data->hz.ty, 2));
-	pe = sqrt(pow(data->player_x - data->vt.tx, 2) + pow(data->player_y - data->vt.ty, 2));
-	if (floor(pd) < floor(pe))
+	dist_hz = sqrt(pow(data->player_x - data->hz.tx, 2) + pow(data->player_y - data->hz.ty, 2));
+	dist_vt = sqrt(pow(data->player_x - data->vt.tx, 2) + pow(data->player_y - data->vt.ty, 2));
+	printf("Distance hz : %f Distance verticale : %f\n", dist_hz, dist_vt);
+	if (dist_hz == 0)
+	{
+		draw_rayon(data, data->vt.tx, data->vt.ty);
+		return ;
+	}
+	if (dist_vt == 0)
+	{
+		draw_rayon(data, data->hz.tx, data->hz.ty);
+		return ;
+	}
+	if (dist_hz < dist_vt)
 		draw_rayon(data, data->hz.tx, data->hz.ty);
 	else
 		draw_rayon(data, data->vt.tx, data->vt.ty);
+
 }
 
 int	key_hook(int keycode, t_data *data)
