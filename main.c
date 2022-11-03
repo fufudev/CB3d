@@ -323,3 +323,4 @@ int	main(int argc, char **argv)
 
 
 //Attention a ya et xa qui parte en couille lorsqu'il n'ya pas d'intersection.
+//oublie pas ta mlx pour faire demarrer sur linux
