@@ -35,6 +35,16 @@ typedef struct	s_img {
 	int		endian;
 }				t_img;
 
+typedef	struct	s_point
+{
+	double	xa;
+	double	ya;
+	double	ay;
+	double	ax;
+	double	tx;
+	double	ty;
+}	t_point;
+
 typedef	struct s_data
 {
 	char **map;
@@ -59,7 +69,10 @@ typedef	struct s_data
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
+	t_point	vt;
+	t_point	hz;
 }	t_data;
+
 
 typedef	struct s_parsing
 {
@@ -67,7 +80,9 @@ typedef	struct s_parsing
 	int indic;
 }	t_parsing;
 
+void	find_and_draw(t_data *data);
 void	window(t_data *data);
+void	draw_rayon(t_data *data, double wall_x, double wall_y);
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 void	ft_putstr_fd(char *msg, int fd);
 void	ft_msg(char *msg);

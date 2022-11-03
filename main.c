@@ -139,33 +139,8 @@ void	window(t_data *data)
 	data->img = mlx_new_image(data->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
 	draw_map(data->s_map, data);
-	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img, 0, 0);
-}
+}	
 
-/*void	init_value_pos(t_data *data)
-{
-
-}*/
-
-void	start_display(t_data *data)
-{
-	//init_value_pos(data);
-	window(data);
-	find_horizontal_intersection(data);
-	find_vertical_intersection(data);
-	mlx_loop(data->mlx_ptr);
-	//event(data);
-}
-
-int	main(int argc, char **argv)
-{
-	t_data		data;
-	t_parsing	parse;
-
-	start_parsing(&data, &parse, argv);
-	start_display(&data);
-	return (0);
-}
 
 double	degree_to_radian(double r)
 {	
@@ -202,60 +177,149 @@ void	init_coordinates_vertical(t_data *data, double *xa, double *ax)
 
 void	find_horizontal_intersection(t_data *data)
 {
-	double	xa;
-	double	ya;
-	double	ay;
-	double	ax;
-	double	tx;
-	double	ty;
-
-	ty = floor(data->player_y);
-	tx = floor(data->player_x);
-	data->player_angle = 60.0;
-	xa = floor(64 / tan(degree_to_radian(60)));
-	init_coordinates_horizontal(data, &ya, &ay);
-	while (data->s_map[(int)floor(ty / 64)][(int)floor(tx / 64)] != '1')
+	data->hz.ty = floor(data->player_y);
+	data->hz.tx = floor(data->player_x);
+	data->hz.xa = floor(64 / tan(degree_to_radian(data->player_angle)));
+	init_coordinates_horizontal(data, &data->hz.ya, &data->hz.ay);
+	while (data->s_map[(int)floor(data->hz.ty / 64)][(int)floor(data->hz.tx / 64)] != '1')
 	{
-		ax = floor(data->player_x + (data->player_y - ay) / tan(degree_to_radian(60)));
-		ty = ay + ya;
-		tx = ax + xa;
-		ay = ty;
-		ax = tx;
+		data->hz.ax = floor(data->player_x + (data->player_y - data->hz.ay) / 
+						tan(degree_to_radian(data->player_angle)));
+		data->hz.ty = data->hz.ay + data->hz.ya;
+		data->hz.tx = data->hz.ax + data->hz.xa;
+		data->hz.ay = data->hz.ty;
+		data->hz.ax = data->hz.tx;
+		if (data->hz.tx < 0 || data->hz.tx > ft_strlen(data->s_map[floor(data->hz.ty / 64)]) - 1) //ICI check xa
+		{
+			data->hz.ty = data->player_y;
+			data->hz.tx = data->player_x;
+			break ;
+		}
 	}
-	printf("Horizontal check :\n(%0.f, %0.f)\n", floor(tx / 64), floor(ty / 64));
+	printf("Horizontal check :\n(%0.f, %0.f)\n", floor(data->hz.tx / 64), floor(data->hz.ty / 64));
 }
 
 void	find_vertical_intersection(t_data *data)
 {
-	double	xa;
-	double	ya;
-	double	ay;
-	double	ax;
-	double	tx;
-	double	ty;
-
-	ty = floor(data->player_y);
-	tx = floor(data->player_x);
-	data->player_angle = 60.0;
-	ya = floor(64 * tan(degree_to_radian(data->player_angle)));
-	init_coordinates_vertical(data, &xa, &ax);
-	while (data->s_map[(int)floor(ty / 64)][(int)floor(tx / 64)] != '1')
+	data->vt.ty = floor(data->player_y);
+	data->vt.tx = floor(data->player_x);
+	data->vt.ya = floor(64 * tan(degree_to_radian(data->player_angle)));
+	init_coordinates_vertical(data, &data->vt.xa, &data->vt.ax);
+	while (data->s_map[(int)floor(data->vt.ty / 64)][(int)floor(data->vt.tx / 64)] != '1' && data->vt.ya != -1)
 	{
-		ay = floor(data->player_y + (data->player_x - ax) * tan(degree_to_radian(data->player_angle)));
-		ty = ay - ya; // ICI FORCEMENT ON DOIT MONTER DONC Y BAISSE C EVIDENT BORDEL !!!!
-		tx = ax + xa;
-		ay = ty;
-		ax = tx;
+		data->vt.ay = floor(data->player_y + (data->player_x - data->vt.ax) *
+						 tan(degree_to_radian(data->player_angle)));
+		data->vt.ty = data->vt.ay - data->vt.ya;
+		data->vt.tx = data->vt.ax + data->vt.xa;
+		data->vt.ay = data->vt.ty;
+		data->vt.ax = data->vt.tx;
+		if (data->vt.ty < 0 || data->vt.ty > ft_strlen(data->s_map[]) - 1) //ICI check ya
+		{
+			data->vt.ty = data->player_y;
+			data->vt.tx = data->player_x;
+			break ;
+		}
+		printf("Ty : %f Tx : %f\n", data->vt.ty, data->vt.tx);
 	}
-	printf("Vertical check :\n(%0.f, %0.f)\n", floor(tx / 64), floor(ty / 64));
+	printf("Vertical check :\n(%0.f, %0.f)\n", floor(data->vt.tx / 64), floor(data->vt.ty / 64));
 }
-/*void	event(t_data *data)
+
+void	draw_rayon(t_data *data, double wall_x, double wall_y)
+{
+	double	m;
+	int		steps;
+	int		i;
+	double	x;
+	double	y;
+
+	m = wall_y - data->player_y / wall_x - data->player_x;
+	if (wall_x - data->player_x > wall_y - data->player_y)
+		steps = fabs(wall_x - data->player_x);
+	else
+		steps = fabs(wall_y - data->player_y);
+	i = 1;
+	x = data->player_x;
+	y = data->player_y;
+	while (i <= steps)
+	{
+		my_mlx_pixel_put(data, floor(x), floor(y), 0xFF0000);
+		x += (wall_x - data->player_x) / steps;
+		y += (wall_y - data->player_y) / steps;
+		i++;
+	}
+}
+
+void	find_distance(t_data *data)
+{
+	double pd;
+	double pe;
+		
+	pd = sqrt(pow(data->player_x - data->hz.tx, 2) + pow(data->player_y - data->hz.ty, 2));
+	pe = sqrt(pow(data->player_x - data->vt.tx, 2) + pow(data->player_y - data->vt.ty, 2));
+	if (floor(pd) < floor(pe))
+		draw_rayon(data, data->hz.tx, data->hz.ty);
+	else
+		draw_rayon(data, data->vt.tx, data->vt.ty);
+}
+
+int	key_hook(int keycode, t_data *data)
+{
+	if (keycode == LEFT)
+	{
+		if (data->player_angle + 1 > 360)
+		{
+			data->player_angle = 0;
+			data->player_angle += 1;
+		}
+		else
+			data->player_angle += 1;
+	}
+	if (keycode == RIGHT)
+	{
+		printf("A droite \n");
+		if (data->player_angle - 1 < 0)
+		{
+			data->player_angle = 360;
+			data->player_angle -= 1;
+		}
+		else
+			data->player_angle -= 1;
+	}
+	find_and_draw(data);
+	return (0);
+}
+
+void	find_and_draw(t_data *data)
+{
+	find_horizontal_intersection(data);
+	find_vertical_intersection(data);
+	find_distance(data);
+	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img, 0, 0);
+}
+
+void	event(t_data *data)
 {
 	mlx_hook(data->win_ptr, 2, 0, key_hook, data);
-	mlx_hook(data->win_ptr, 17, 0, closewd, data);
-	mlx_loop_hook(data->mlx_ptr, draw_again, data);
+	//mlx_hook(data->win_ptr, 17, 0, closewd, data);
 	mlx_loop(data->mlx_ptr);
 }
-*/
+
+void	start_display(t_data *data)
+{
+	window(data);
+	find_and_draw(data);
+	event(data);
+}
+
+int	main(int argc, char **argv)
+{
+	t_data		data;
+	t_parsing	parse;
+
+	start_parsing(&data, &parse, argv);
+	start_display(&data);
+	return (0);
+}
 
 
+//Attention a ya et xa qui parte en couille lorsqu'il n'ya pas d'intersection.
