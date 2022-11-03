@@ -175,12 +175,35 @@ void	init_coordinates_vertical(t_data *data, double *xa, double *ax)
 	}
 }
 
+int	ft_biglen(char **s)
+{
+	int i;
+	int j;
+	int len;
+
+	i = 0;
+	len = 0;
+	while (s[i])
+	{
+		j = 0;
+		while(s[i][j])
+			j++;
+		if (j > len)
+			len = j;
+		i++;
+	}
+	return (len);
+}
+
 void	find_horizontal_intersection(t_data *data)
 {
+	int len;
+
 	data->hz.ty = floor(data->player_y);
 	data->hz.tx = floor(data->player_x);
 	data->hz.xa = floor(64 / tan(degree_to_radian(data->player_angle)));
 	init_coordinates_horizontal(data, &data->hz.ya, &data->hz.ay);
+	len = ft_biglen(data->s_map);
 	while (data->s_map[(int)floor(data->hz.ty / 64)][(int)floor(data->hz.tx / 64)] != '1')
 	{
 		data->hz.ax = floor(data->player_x + (data->player_y - data->hz.ay) / 
@@ -189,14 +212,16 @@ void	find_horizontal_intersection(t_data *data)
 		data->hz.tx = data->hz.ax + data->hz.xa;
 		data->hz.ay = data->hz.ty;
 		data->hz.ax = data->hz.tx;
-		if (data->hz.tx < 0 || data->hz.tx > ft_strlen(data->s_map[floor(data->hz.ty / 64)]) - 1) //ICI check xa
+		if (!(floor(data->hz.tx / 64) > 0 && floor(data->hz.tx / 64) < len)) //ICI check xa
 		{
-			data->hz.ty = data->player_y;
-			data->hz.tx = data->player_x;
+			data->hz.ty = 100000;
+			data->hz.tx = 100000;
 			break ;
 		}
+		printf("\nHorizontal - Ty : %f Tx : %f\n", data->hz.ty, data->hz.tx);
+
 	}
-	printf("Horizontal check :\n(%0.f, %0.f)\n", floor(data->hz.tx / 64), floor(data->hz.ty / 64));
+	printf("\nHorizontal check :\n(%0.f, %0.f)\n", floor(data->hz.tx / 64), floor(data->hz.ty / 64));
 }
 
 void	find_vertical_intersection(t_data *data)
@@ -213,15 +238,15 @@ void	find_vertical_intersection(t_data *data)
 		data->vt.tx = data->vt.ax + data->vt.xa;
 		data->vt.ay = data->vt.ty;
 		data->vt.ax = data->vt.tx;
-		if (data->vt.ty < 0 || data->vt.ty > ft_strlen(data->s_map[]) - 1) //ICI check ya
+		if (!(floor(data->vt.ty / 64) > 0 && floor(data->vt.ty / 64) < ft_strlen2d(data->s_map) - 1)) //ICI check ya
 		{
-			data->vt.ty = data->player_y;
-			data->vt.tx = data->player_x;
+			data->vt.ty = 100000;
+			data->vt.tx = 100000;
 			break ;
 		}
-		printf("Ty : %f Tx : %f\n", data->vt.ty, data->vt.tx);
+		printf("\nVertical - Ty : %f Tx : %f\n", data->vt.ty, data->vt.tx);
 	}
-	printf("Vertical check :\n(%0.f, %0.f)\n", floor(data->vt.tx / 64), floor(data->vt.ty / 64));
+	printf("\nVertical check :\n(%0.f, %0.f)\n", floor(data->vt.tx / 64), floor(data->vt.ty / 64));
 }
 
 void	draw_rayon(t_data *data, double wall_x, double wall_y)
@@ -264,6 +289,8 @@ void	find_distance(t_data *data)
 
 int	key_hook(int keycode, t_data *data)
 {
+	printf("\n---------------------\n");
+	printf("Player angle = %f\n", data->player_angle);
 	if (keycode == LEFT)
 	{
 		if (data->player_angle + 1 > 360)
@@ -276,7 +303,6 @@ int	key_hook(int keycode, t_data *data)
 	}
 	if (keycode == RIGHT)
 	{
-		printf("A droite \n");
 		if (data->player_angle - 1 < 0)
 		{
 			data->player_angle = 360;
