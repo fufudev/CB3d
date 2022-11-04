@@ -6,7 +6,7 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 10:49:24 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/04 15:37:23 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/04 20:30:25 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ void	window(t_data *data)
 
 double	degree_to_radian(double r)
 {
-	return((r * (M_PI / 180)) + 0.0001);
+	return((r * (M_PI / 180)) + 0.001);
 }
 
 void	init_coordinates_horizontal(t_data *data, double *ya, double *ay)
@@ -149,7 +149,7 @@ void	init_coordinates_horizontal(t_data *data, double *ya, double *ay)
 	if (data->player_angle >= 0.0 && data->player_angle < 180.0)
 	{
 		*ya = -64.0;
-		*ay = floor(data->player_y / 64.0) * (64.0) - 0.00000001;
+		*ay = floor(data->player_y / 64.0) * (64.0) - 1;
 	}
 	else
 	{
@@ -168,7 +168,7 @@ void	init_coordinates_vertical(t_data *data, double *xa, double *ax)
 	else
 	{
 		*xa = -64.0;
-		*ax = floor(data->player_x / 64.0) * (64.0) - 0.00000001;
+		*ax = floor(data->player_x / 64.0) * (64.0) - 1;
 	}
 }
 
@@ -194,7 +194,7 @@ int	ft_biglen(char **s)
 
 int	check_hz_broke(t_data *data)
 {
-	if (!(floor(data->hz.tx / 64.0) > 0 && floor(data->hz.tx / 64.0) < ft_biglen(data->s_map)))
+	if (!(floor(data->hz.tx / 64.0) > 0 && floor(data->hz.tx / 64.0) < ft_biglen(data->s_map) - 1))
 	{
 		data->hz.ty = data->player_y;
 		data->hz.tx = data->player_x;
@@ -224,7 +224,7 @@ void	find_horizontal_intersection(t_data *data)
 						tan(degree_to_radian(data->player_angle));
 	if (check_hz_broke(data))
 		return ;
-	printf("\nHorizontal - Ty : %f Tx : %f\n", data->hz.ty, data->hz.tx);
+	//printf("\nHorizontal - Ty : %f Tx : %f\n", data->hz.ty, data->hz.tx);
 	while (data->s_map[(int)floor(data->hz.ty / 64.0)][(int)floor(data->hz.tx / 64.0)] != '1')
 	{
 		data->hz.ax = data->player_x + (data->player_y - data->hz.ay) / 
@@ -235,9 +235,9 @@ void	find_horizontal_intersection(t_data *data)
 		data->hz.ax = data->hz.tx;
 		if (check_hz_broke(data))
 			return ;
-		printf("\nHorizontal - Ty : %f Tx : %f\n", data->hz.ty, data->hz.tx);	
+		//printf("\nHorizontal - Ty : %f Tx : %f\n", data->hz.ty, data->hz.tx);	
 	}
-	printf("\nHorizontal check :\n(%0.f, %0.f)\n", floor(data->hz.tx / 64.0), floor(data->hz.ty / 64.0));
+	//printf("\nHorizontal check :\n(%0.f, %0.f)\n", floor(data->hz.tx / 64.0), floor(data->hz.ty / 64.0));
 }
 
 void	find_vertical_intersection(t_data *data)
@@ -249,7 +249,7 @@ void	find_vertical_intersection(t_data *data)
 	data->vt.tx = data->vt.ax ;
 	if (check_vt_broke(data) == 1)
 		return ;
-	printf("Ici ty : %f | tx : %f\n", floor(data->vt.ty / 64.0), floor(data->vt.tx / 64.0));
+	//printf("Ici ty : %f | tx : %f\n", floor(data->vt.ty / 64.0), floor(data->vt.tx / 64.0));
 	while (data->s_map[(int)floor(data->vt.ty / 64.0)][(int)floor(data->vt.tx / 64.0)] != '1')
 	{
 		data->vt.ay = data->player_y + (data->player_x - data->vt.ax)
@@ -260,9 +260,9 @@ void	find_vertical_intersection(t_data *data)
 		data->vt.ax = data->vt.tx;
 		if (check_vt_broke(data) == 1)
 			return ;
-		printf("\nVertical - Ty : %f Tx : %f\n", data->vt.ty, data->vt.tx);
+		//printf("\nVertical - Ty : %f Tx : %f\n", data->vt.ty, data->vt.tx);
 	}
-	printf("\nVertical check :\n(%0.f, %0.f)\n", floor(data->vt.tx / 64.0), floor(data->vt.ty / 64.0));
+	//printf("\nVertical check :\n(%0.f, %0.f)\n", floor(data->vt.tx / 64.0), floor(data->vt.ty / 64.0));
 }
 
 void	draw_rayon(t_data *data, double wall_x, double wall_y)
@@ -279,13 +279,15 @@ void	draw_rayon(t_data *data, double wall_x, double wall_y)
 	i = 1;
 	x = data->player_x;
 	y = data->player_y;
-	//printf("Wall_x = %f Wall_y = %f\n", wall_x, wall_y);
+	//printf("Player X : %f | Player Y : %f\n", x, y);
+	//printf("Wall_x = %d Wall_y = %f\n", (int)wall_x, wall_y);
 	//printf("Steps : %d | x : %f | y : %f | dx : %f | dy : %f\n", steps, x, y, floor(wall_x) - data->player_x, floor(wall_y) - data->player_y);
 	while (i <= steps)
 	{
-		my_mlx_pixel_put(data, x, y, 0xFF0000);
+		my_mlx_pixel_put(data, round(x), round(y), 0xFF0000);
 		x += (wall_x - data->player_x) / steps;
 		y += (wall_y - data->player_y) / steps;
+		//printf("Player X : %f | Player Y : %f\n", x, y);
 		i++;
 	}
 }
@@ -297,7 +299,7 @@ void	find_distance(t_data *data)
 		
 	dist_hz = sqrt(pow(data->player_x - data->hz.tx, 2) + pow(data->player_y - data->hz.ty, 2));
 	dist_vt = sqrt(pow(data->player_x - data->vt.tx, 2) + pow(data->player_y - data->vt.ty, 2));
-	printf("Distance hz : %f Distance verticale : %f\n", dist_hz, dist_vt);
+	//printf("Distance hz : %f Distance verticale : %f\n", dist_hz, dist_vt);
 	if (dist_hz == 0.0)
 	{
 		draw_rayon(data, data->vt.tx, data->vt.ty);
@@ -314,29 +316,73 @@ void	find_distance(t_data *data)
 		draw_rayon(data, data->vt.tx, data->vt.ty);
 }
 
-
-int	key_hook(int keycode, t_data *data)
+void	left_right(int keycode, t_data *data)
 {
 	if (keycode == LEFT)
 	{
-		if (data->player_angle + 0.5 > 360)
+		if (data->player_angle + 1 > 360)
 		{
 			data->player_angle = 0;
-			data->player_angle += 5;
+			data->player_angle += 1;
 		}
 		else
-			data->player_angle += 5;
+			data->player_angle += 1;
 	}
 	if (keycode == RIGHT)
 	{
-		if (data->player_angle - 0.5 < 0)
+		if (data->player_angle - 1 < 0)
 		{
 			data->player_angle = 360;
-			data->player_angle -= 5;
+			data->player_angle -= 1;
 		}
 		else
-			data->player_angle -= 5;
+			data->player_angle -= 1;
 	}
+}
+
+void	up_back(int keycode, t_data *data)
+{
+	double	x_tmp;
+	double	y_tmp;
+	int		big_len;
+	size_t	len;
+
+	x_tmp = cos(degree_to_radian(data->player_angle)) * data->speed;
+	y_tmp = sin(degree_to_radian(data->player_angle)) * data->speed;
+	big_len = ft_biglen(data->s_map) - 1;
+	len = ft_strlen(data->s_map[(int)floor(data->player_y / 64)] - 1);
+	if (keycode == W)
+	{
+		if ((size_t)floor((data->player_x + x_tmp) / 64) < len
+			&& (int)floor((data->player_y - y_tmp) / 64 < big_len))
+		{
+			if (data->s_map[(int)floor(((data->player_y - y_tmp) / 64))][(int)(floor((data->player_x + x_tmp) / 64))] != '1')
+			{
+				data->player_x += x_tmp;
+				data->player_y -= y_tmp;
+			}
+		}
+	}
+	if (keycode == A)
+	{
+		if (((size_t)floor((data->player_x - x_tmp) / 64) < len
+			&& (int)floor((data->player_y + y_tmp) / 64) < big_len))
+		{
+			if (data->s_map[(int)floor(((data->player_y + y_tmp) / 64))][(int)(floor((data->player_x - x_tmp) / 64))] != '1')
+			{
+				data->player_x -= x_tmp;
+				data->player_y += y_tmp;
+			}
+		}
+	}	
+}
+
+int	key_hook(int keycode, t_data *data)
+{
+	if (keycode == LEFT || keycode == RIGHT)
+		left_right(keycode, data);
+	if (keycode == W || keycode == A)
+		up_back(keycode, data);
 	mlx_destroy_image(data->mlx_ptr, data->img);
 	find_and_draw(data);
 	return (0);

@@ -9,7 +9,7 @@
 # include "mlx/mlx.h"
 # include "mlx/mlx_opengl.h"
 # include <math.h>
-# include "X11/X.h"
+//# include "X11/X.h"
 
 # define ESC 0x35
 # define FOV 60
@@ -19,8 +19,8 @@
 # define WEST 180
 # define NORTH 90
 # define SOUTH 270
-# define W 13
-# define A 0
+# define W 6
+# define A 12
 # define S 1
 # define D 2
 # define LEFT 123
@@ -65,6 +65,7 @@ typedef struct s_data
 	double	player_y;
 	double	player_x;
 	double	player_angle;
+	int		speed;
 	void	*mlx_ptr;
 	void	*win_ptr;
 	void	*img;
