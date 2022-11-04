@@ -1,14 +1,15 @@
-#ifndef CUB3D_H
-#define CUB3D_H
+# ifndef CUB3D_H
+# define CUB3D_H
 
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include "libft/libft.h"
-#include "mlx/mlx.h"
-#include "mlx/mlx_opengl.h"
-#include <math.h>
+# include <unistd.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <fcntl.h>
+# include "libft/libft.h"
+# include "mlx/mlx.h"
+# include "mlx/mlx_opengl.h"
+# include <math.h>
+# include "X11/X.h"
 
 # define ESC 0x35
 # define FOV 60
@@ -24,10 +25,12 @@
 # define D 2
 # define LEFT 123
 # define RIGHT 124
+# define LEFT_L 65361
+# define RIGHT_L 65363
 # define WINDOW_WIDTH 1280
 # define WINDOW_HEIGHT 720
 
-typedef struct	s_img {
+typedef struct s_img {
 	void	*img;
 	char	*addr;
 	int		bits_per_pixel;
@@ -35,7 +38,7 @@ typedef struct	s_img {
 	int		endian;
 }				t_img;
 
-typedef	struct	s_point
+typedef struct s_point
 {
 	double	xa;
 	double	ya;
@@ -45,23 +48,23 @@ typedef	struct	s_point
 	double	ty;
 }	t_point;
 
-typedef	struct s_data
+typedef struct s_data
 {
-	char **map;
-	char **s_map;
-	int no;
-	int so;
-	int we;
-	int ea;
-	int f;
-	int c;
-	int indic;
-	int	newline;
-	int pos_y;
-	int pos_x;
-	double player_y;
-	double player_x;
-	double player_angle;
+	char	**map;
+	char	**s_map;
+	int		no;
+	int		so;
+	int		we;
+	int		ea;
+	int		f;
+	int		c;
+	int		indic;
+	int		newline;
+	int		pos_y;
+	int		pos_x;
+	double	player_y;
+	double	player_x;
+	double	player_angle;
 	void	*mlx_ptr;
 	void	*win_ptr;
 	void	*img;
@@ -73,11 +76,10 @@ typedef	struct s_data
 	t_point	hz;
 }	t_data;
 
-
-typedef	struct s_parsing
+typedef struct s_parsing
 {
-	int fd;
-	int indic;
+	int	fd;
+	int	indic;
 }	t_parsing;
 
 void	find_and_draw(t_data *data);
@@ -135,6 +137,5 @@ int		draw_again(t_data *data);
 void	finding_wall(t_data *data);
 void	find_horizontal_intersection(t_data *data);
 void	find_vertical_intersection(t_data *data);
-
 
 #endif
