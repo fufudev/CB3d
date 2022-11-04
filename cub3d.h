@@ -73,6 +73,8 @@ typedef struct s_data
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
+	int		big_len;
+	size_t	len;
 	t_point	vt;
 	t_point	hz;
 }	t_data;
