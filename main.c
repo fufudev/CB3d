@@ -6,7 +6,7 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 10:49:24 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/04 20:30:25 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/05 20:05:57 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -318,7 +318,7 @@ void	find_distance(t_data *data)
 
 void	left_right(int keycode, t_data *data)
 {
-	if (keycode == LEFT)
+	if (keycode == LEFT_L)
 	{
 		if (data->player_angle + 1 > 360)
 		{
@@ -328,7 +328,7 @@ void	left_right(int keycode, t_data *data)
 		else
 			data->player_angle += 1;
 	}
-	if (keycode == RIGHT)
+	if (keycode == RIGHT_L)
 	{
 		if (data->player_angle - 1 < 0)
 		{
@@ -343,7 +343,7 @@ void	left_right(int keycode, t_data *data)
 void	up(t_data *data, double *x_tmp, double *y_tmp)
 {
 	if ((size_t)floor((data->player_x + *x_tmp) / 64) < data->len
-		&& (int)floor((data->player_y - *y_tmp) / 64 < data->big_len))
+		&& (int)floor((data->player_y - *y_tmp) / 64) < data->big_len)
 	{
 		if (data->s_map[(int)floor(((data->player_y - *y_tmp) / 64))][(int)(floor((data->player_x + *x_tmp) / 64))] != '1')
 		{
@@ -374,10 +374,10 @@ void	up_back(int keycode, t_data *data)
 	x_tmp = cos(degree_to_radian(data->player_angle)) * data->speed;
 	y_tmp = sin(degree_to_radian(data->player_angle)) * data->speed;
 	data->big_len = ft_biglen(data->s_map) - 1;
-	data->len = ft_strlen(data->s_map[(int)floor(data->player_y / 64)] - 1);
+	data->len = ft_strlen(data->s_map[(int)floor(data->player_y / 64)]) - 1;
 	if (keycode == W)
 		up(data, &x_tmp, &y_tmp);
-	if (keycode == A)
+	if (keycode == S)
 		back(data, &x_tmp, &y_tmp);
 }
 
@@ -390,6 +390,7 @@ void	left_side(t_data *data, double *x_tmp, double *y_tmp)
 		if (data->s_map[(int)floor(((data->player_y + *y_tmp) / 64))][(int)(floor((data->player_x - *x_tmp) / 64))] != '1')
 		{
 			printf("here5\n");
+			// if (data->player_x) faire + x et - y si en haut et l'inverse si en bas je pense !
 			data->player_x -= *x_tmp;
 			data->player_y += *y_tmp;
 		}
@@ -399,7 +400,7 @@ void	left_side(t_data *data, double *x_tmp, double *y_tmp)
 void	right_side(t_data *data, double *x_tmp, double *y_tmp)
 {
 	if ((size_t)floor((data->player_x + *x_tmp) / 64) < data->len
-		&& (int)floor((data->player_y - *y_tmp) / 64 < data->big_len))
+		&& (int)floor((data->player_y - *y_tmp) / 64) < data->big_len)
 	{
 		printf("here2\n");
 		if (data->s_map[(int)floor(((data->player_y - *y_tmp) / 64))][(int)(floor((data->player_x + *x_tmp) / 64))] != '1')
@@ -416,12 +417,20 @@ void	step_side(int keycode, t_data *data)
 	double	x_tmp;
 	double	y_tmp;
 
-	x_tmp = cos(degree_to_radian(data->player_angle - 90)) * data->speed;
-	y_tmp = sin(degree_to_radian(data->player_angle - 90)) * data->speed;
+	if  (data->player_angle >= 90 && data->player_angle <= 270)
+	{
+		x_tmp = cos(degree_to_radian(data->player_angle - 90.0)) * data->speed;
+		y_tmp = sin(degree_to_radian(data->player_angle - 90.0)) * data->speed;
+	}
+	else
+	{
+		x_tmp = cos(degree_to_radian(data->player_angle + 90.0)) * data->speed;
+		y_tmp = sin(degree_to_radian(data->player_angle + 90.0)) * data->speed;
+	}
 	data->big_len = ft_biglen(data->s_map) - 1;
-	data->len = ft_strlen(data->s_map[(int)floor(data->player_y / 64)] - 1);
+	data->len = ft_strlen(data->s_map[(int)floor(data->player_y / 64)]) - 1;
 	printf("here1\n");
-	if (keycode == S && (data->player_angle >= 90 && data->player_angle <= 270))
+	if (keycode == A)
 		left_side(data, &x_tmp, &y_tmp);
 	if (keycode == D)
 		right_side(data, &x_tmp, &y_tmp);
@@ -429,11 +438,12 @@ void	step_side(int keycode, t_data *data)
 
 int	key_hook(int keycode, t_data *data)
 {
-	if (keycode == LEFT || keycode == RIGHT)
+	printf("%d\n", keycode);
+	if (keycode == LEFT_L || keycode == RIGHT_L) // LEFT RIGHT
 		left_right(keycode, data);
-	if (keycode == W || keycode == A)
+	if (keycode == W || keycode == S)
 		up_back(keycode, data);
-	if (keycode == S || keycode == D)
+	if (keycode == A || keycode == D)
 		step_side(keycode, data);
 	mlx_destroy_image(data->mlx_ptr, data->img);
 	find_and_draw(data);
@@ -453,7 +463,7 @@ void	find_and_draw(t_data *data)
 
 void	event(t_data *data)
 {
-	mlx_hook(data->win_ptr, 2, 0, key_hook, data);
+	mlx_hook(data->win_ptr, KeyPress, KeyPressMask, key_hook, data); // CHANGEZ KEYPRESS KEYPRESSMASK
 	//mlx_hook(data->win_ptr, 17, 0, closewd, data);
 	mlx_loop(data->mlx_ptr);
 }
