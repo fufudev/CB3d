@@ -6,7 +6,7 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 10:49:24 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/05 20:05:57 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/07 12:18:49 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,59 @@ void	init_img(t_data *data)
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
 }
 
+/*void	draw_3D(t_data *data)
+{
+	double	offset;
+	int		x;
+	double	center;
+	
+	center = WINDOW_WIDTH / 2;
+	data->line_height = (64 * WINDOW_HEIGHT) / data->distance;
+	printf("Line height : %f\n", data->line_height);
+	offset = WINDOW_HEIGHT - data->line_height / 2;
+	if (data->line_height > WINDOW_HEIGHT)
+		data->line_height = WINDOW_HEIGHT;
+	draw_column(data, x);
+	//while(x <= WINDOW_WIDTH)
+	//	draw_column(data, x++);
+}*/
+
+void	draw_3D(t_data *data) // TEST 1 RENDU 3D
+{
+	double	slice_height;
+	int		x;
+	int		y;
+	int		w;
+	double	center;
+	double	dist_plane;
+	double 	dist_before_wall;
+
+	x = 0;
+	data->distance = data->distance * 64;
+	while(x <= WINDOW_WIDTH)
+	{
+		y = 0;
+		w = 0;
+		center = WINDOW_HEIGHT / 2;
+		dist_plane = center / tan(degree_to_radian(30));
+		slice_height = 64 / data->distance * dist_plane;
+		dist_before_wall = center - slice_height / 2;
+		//printf("Center = %f | Slice_height = %f | Distance = %f | Dist_plane = %f | Dist_before_wall = %f\n", center, slice_height / 2, data->distance, dist_plane, dist_before_wall);
+		while(y <= dist_before_wall)
+		{
+			my_mlx_pixel_put(data, x, y, 0x000000);
+			y++;
+		}
+		//printf("---------here--------\n");
+		while(w <= slice_height)
+		{
+			my_mlx_pixel_put(data, x, w + y, 0xFF0000);
+			w++;
+		}
+		x++;
+	}
+}
+
 void	draw_player(t_data *data, int py, int px, int color)
 {
 	int i;
@@ -146,7 +199,7 @@ double	degree_to_radian(double r)
 
 void	init_coordinates_horizontal(t_data *data, double *ya, double *ay)
 {
-	if (data->player_angle >= 0.0 && data->player_angle < 180.0)
+	if (data->tmp_angle >= 0.0 && data->tmp_angle < 180.0)
 	{
 		*ya = -64.0;
 		*ay = floor(data->player_y / 64.0) * (64.0) - 1.0;
@@ -160,7 +213,7 @@ void	init_coordinates_horizontal(t_data *data, double *ya, double *ay)
 
 void	init_coordinates_vertical(t_data *data, double *xa, double *ax)
 {
-	if ((data->player_angle >= 0.0 && data->player_angle <= 90.0) || (data->player_angle >= 270.0 && data->player_angle <= 360.0))
+	if ((data->tmp_angle >= 0.0 && data->tmp_angle <= 90.0) || (data->tmp_angle >= 270.0 && data->tmp_angle <= 360.0))
 	{
 		*xa = 64.0;
 		*ax = floor(data->player_x / 64.0) * (64.0) + 64.0;
@@ -218,51 +271,45 @@ int	check_vt_broke(t_data *data)
 void	find_horizontal_intersection(t_data *data)
 {
 	init_coordinates_horizontal(data, &data->hz.ya, &data->hz.ay);
-	data->hz.xa = -(data->hz.ya) / tan(degree_to_radian(data->player_angle));
+	data->hz.xa = -(data->hz.ya) / tan(degree_to_radian(data->tmp_angle));
 	data->hz.ty = data->hz.ay;
 	data->hz.tx = data->player_x + (data->player_y - data->hz.ay) / 
-						tan(degree_to_radian(data->player_angle));
+						tan(degree_to_radian(data->tmp_angle));
 	if (check_hz_broke(data))
 		return ;
-	//printf("\nHorizontal - Ty : %f Tx : %f\n", data->hz.ty, data->hz.tx);
 	while (data->s_map[(int)floor(data->hz.ty / 64.0)][(int)floor(data->hz.tx / 64.0)] != '1')
 	{
 		data->hz.ax = data->player_x + (data->player_y - data->hz.ay) / 
-						tan(degree_to_radian(data->player_angle));
+						tan(degree_to_radian(data->tmp_angle));
 		data->hz.ty = data->hz.ay + data->hz.ya;
 		data->hz.tx = data->hz.ax + data->hz.xa;
 		data->hz.ay = data->hz.ty;
 		data->hz.ax = data->hz.tx;
 		if (check_hz_broke(data))
 			return ;
-		//printf("\nHorizontal - Ty : %f Tx : %f\n", data->hz.ty, data->hz.tx);	
 	}
-	//printf("\nHorizontal check :\n(%0.f, %0.f)\n", floor(data->hz.tx / 64.0), floor(data->hz.ty / 64.0));
 }
 
 void	find_vertical_intersection(t_data *data)
 {
 	init_coordinates_vertical(data, &data->vt.xa, &data->vt.ax);
-	data->vt.ya = -(data->vt.xa) * tan(degree_to_radian(data->player_angle));
+	data->vt.ya = -(data->vt.xa) * tan(degree_to_radian(data->tmp_angle));
 	data->vt.ty = data->player_y + (data->player_x - data->vt.ax)
-							* tan(degree_to_radian(data->player_angle));
+							* tan(degree_to_radian(data->tmp_angle));
 	data->vt.tx = data->vt.ax ;
 	if (check_vt_broke(data) == 1)
 		return ;
-	//printf("Ici ty : %f | tx : %f\n", floor(data->vt.ty / 64.0), floor(data->vt.tx / 64.0));
 	while (data->s_map[(int)floor(data->vt.ty / 64.0)][(int)floor(data->vt.tx / 64.0)] != '1')
 	{
 		data->vt.ay = data->player_y + (data->player_x - data->vt.ax)
-							* tan(degree_to_radian(data->player_angle));
+							* tan(degree_to_radian(data->tmp_angle));
 		data->vt.ty = data->vt.ay + data->vt.ya;
 		data->vt.tx = data->vt.ax + data->vt.xa;
 		data->vt.ay = data->vt.ty;
 		data->vt.ax = data->vt.tx;
 		if (check_vt_broke(data) == 1)
 			return ;
-		//printf("\nVertical - Ty : %f Tx : %f\n", data->vt.ty, data->vt.tx);
 	}
-	//printf("\nVertical check :\n(%0.f, %0.f)\n", floor(data->vt.tx / 64.0), floor(data->vt.ty / 64.0));
 }
 
 void	draw_rayon(t_data *data, double wall_x, double wall_y)
@@ -279,15 +326,11 @@ void	draw_rayon(t_data *data, double wall_x, double wall_y)
 	i = 1;
 	x = data->player_x;
 	y = data->player_y;
-	//printf("Player X : %f | Player Y : %f\n", x, y);
-	//printf("Wall_x = %d Wall_y = %f\n", (int)wall_x, wall_y);
-	//printf("Steps : %d | x : %f | y : %f | dx : %f | dy : %f\n", steps, x, y, floor(wall_x) - data->player_x, floor(wall_y) - data->player_y);
 	while (i <= steps)
 	{
 		my_mlx_pixel_put(data, round(x), round(y), 0xFF0000);
 		x += (wall_x - data->player_x) / steps;
 		y += (wall_y - data->player_y) / steps;
-		//printf("Player X : %f | Player Y : %f\n", x, y);
 		i++;
 	}
 }
@@ -299,44 +342,52 @@ void	find_distance(t_data *data)
 		
 	dist_hz = sqrt(pow(data->player_x - data->hz.tx, 2) + pow(data->player_y - data->hz.ty, 2));
 	dist_vt = sqrt(pow(data->player_x - data->vt.tx, 2) + pow(data->player_y - data->vt.ty, 2));
-	//printf("Distance hz : %f Distance verticale : %f\n", dist_hz, dist_vt);
+	printf("hz = %f | vt = %f\n", dist_hz * 64, dist_vt * 64);
 	if (dist_hz == 0.0)
 	{
 		draw_rayon(data, data->vt.tx, data->vt.ty);
+		data->distance = dist_vt;
 		return ;
 	}
 	if (dist_vt == 0.0)
 	{
 		draw_rayon(data, data->hz.tx, data->hz.ty);
+		data->distance = dist_hz;
 		return ;
 	}
 	if (dist_hz < dist_vt)
+	{
+		data->distance = dist_hz;
 		draw_rayon(data, data->hz.tx, data->hz.ty);
+	}
 	else
+	{
+		data->distance = dist_vt;
 		draw_rayon(data, data->vt.tx, data->vt.ty);
+	}
 }
 
 void	left_right(int keycode, t_data *data)
 {
-	if (keycode == LEFT_L)
+	if (keycode == LEFT)
 	{
-		if (data->player_angle + 1 > 360)
+		if (data->player_angle + 3 > 360)
 		{
 			data->player_angle = 0;
-			data->player_angle += 1;
+			data->player_angle += 3;
 		}
 		else
-			data->player_angle += 1;
+			data->player_angle += 3;
 	}
-	if (keycode == RIGHT_L)
+	if (keycode == RIGHT)
 	{
-		if (data->player_angle - 1 < 0)
+		if (data->player_angle - 3 < 0)
 		{
 			data->player_angle = 360;
-			data->player_angle -= 1;
+			data->player_angle -= 3;
 		}
 		else
-			data->player_angle -= 1;
+			data->player_angle -= 3;
 	}
 }
 
@@ -386,11 +437,8 @@ void	left_side(t_data *data, double *x_tmp, double *y_tmp)
 	if (((size_t)floor((data->player_x - *x_tmp) / 64) < data->len
 		&& (int)floor((data->player_y + *y_tmp) / 64) < data->big_len))
 	{
-		printf("here4\n");
 		if (data->s_map[(int)floor(((data->player_y + *y_tmp) / 64))][(int)(floor((data->player_x - *x_tmp) / 64))] != '1')
 		{
-			printf("here5\n");
-			// if (data->player_x) faire + x et - y si en haut et l'inverse si en bas je pense !
 			data->player_x -= *x_tmp;
 			data->player_y += *y_tmp;
 		}
@@ -402,10 +450,8 @@ void	right_side(t_data *data, double *x_tmp, double *y_tmp)
 	if ((size_t)floor((data->player_x + *x_tmp) / 64) < data->len
 		&& (int)floor((data->player_y - *y_tmp) / 64) < data->big_len)
 	{
-		printf("here2\n");
 		if (data->s_map[(int)floor(((data->player_y - *y_tmp) / 64))][(int)(floor((data->player_x + *x_tmp) / 64))] != '1')
 		{
-			printf("here3\n");
 			data->player_x += *x_tmp;
 			data->player_y -= *y_tmp;
 		}
@@ -417,19 +463,10 @@ void	step_side(int keycode, t_data *data)
 	double	x_tmp;
 	double	y_tmp;
 
-	if  (data->player_angle >= 90 && data->player_angle <= 270)
-	{
-		x_tmp = cos(degree_to_radian(data->player_angle - 90.0)) * data->speed;
-		y_tmp = sin(degree_to_radian(data->player_angle - 90.0)) * data->speed;
-	}
-	else
-	{
-		x_tmp = cos(degree_to_radian(data->player_angle + 90.0)) * data->speed;
-		y_tmp = sin(degree_to_radian(data->player_angle + 90.0)) * data->speed;
-	}
+	x_tmp = cos(degree_to_radian(data->player_angle - 90.0)) * data->speed;
+	y_tmp = sin(degree_to_radian(data->player_angle - 90.0)) * data->speed;
 	data->big_len = ft_biglen(data->s_map) - 1;
 	data->len = ft_strlen(data->s_map[(int)floor(data->player_y / 64)]) - 1;
-	printf("here1\n");
 	if (keycode == A)
 		left_side(data, &x_tmp, &y_tmp);
 	if (keycode == D)
@@ -438,8 +475,7 @@ void	step_side(int keycode, t_data *data)
 
 int	key_hook(int keycode, t_data *data)
 {
-	printf("%d\n", keycode);
-	if (keycode == LEFT_L || keycode == RIGHT_L) // LEFT RIGHT
+	if (keycode == LEFT || keycode == RIGHT)
 		left_right(keycode, data);
 	if (keycode == W || keycode == S)
 		up_back(keycode, data);
@@ -452,20 +488,46 @@ int	key_hook(int keycode, t_data *data)
 
 void	find_and_draw(t_data *data)
 {
+	int	steps;
+
 	data->img = mlx_new_image(data->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
-	draw_map(data->s_map, data);
-	find_horizontal_intersection(data);
-	find_vertical_intersection(data);
-	find_distance(data);
+	//draw_map(data->s_map, data);
+	data->tmp_angle = data->player_angle - (FOV / 2);
+	steps = 1;
+	while (steps <= FOV / 3)
+	{
+		if (data->tmp_angle > 360)
+			data->tmp_angle = 1;
+		if (data->tmp_angle < 0)
+			data->tmp_angle = 360 + data->player_angle - (FOV / 2);
+		find_horizontal_intersection(data);
+		find_vertical_intersection(data);
+		find_distance(data);
+		data->tmp_angle += 3;
+		steps++;
+		draw_3D(data);
+	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img, 0, 0);
 }
 
 void	event(t_data *data)
 {
-	mlx_hook(data->win_ptr, KeyPress, KeyPressMask, key_hook, data); // CHANGEZ KEYPRESS KEYPRESSMASK
+	mlx_hook(data->win_ptr, 2, 0, key_hook, data); // CHANGEZ KEYPRESS KEYPRESSMASK
 	//mlx_hook(data->win_ptr, 17, 0, closewd, data);
 	mlx_loop(data->mlx_ptr);
+}
+
+void	draw_column(t_data *data, int x)
+{
+	int	y;
+
+	y = 0;
+	while (y < data->line_height)
+	{
+		my_mlx_pixel_put(data, x, y, 0xFF00FF);
+		y++;
+	}
 }
 
 void	start_display(t_data *data)

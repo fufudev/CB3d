@@ -65,6 +65,9 @@ typedef struct s_data
 	double	player_y;
 	double	player_x;
 	double	player_angle;
+	double	tmp_angle;
+	double	distance;
+	double	line_height;
 	int		speed;
 	void	*mlx_ptr;
 	void	*win_ptr;
@@ -140,5 +143,7 @@ int		draw_again(t_data *data);
 void	finding_wall(t_data *data);
 void	find_horizontal_intersection(t_data *data);
 void	find_vertical_intersection(t_data *data);
-
+void	draw_3D(t_data *data);
+void	draw_column(t_data *data, int x);
+void	find_and_draw(t_data *data);
 #endif
