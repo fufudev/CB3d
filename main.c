@@ -96,33 +96,41 @@ void	init_img(t_data *data)
 	//	draw_column(data, x++);
 }*/
 
+void	remove_distorsion(t_data *data)
+{
+	data->distance = data->distance * cos(degree_to_radian(30));
+}
+
 void	draw_3D(t_data *data) // TEST 1 RENDU 3D
 {
 	double	slice_height;
 	int		x;
 	int		y;
 	int		w;
+	int		f;
 	double	center;
 	double	dist_plane;
 	double 	dist_before_wall;
 
 	x = 0;
-	data->distance = data->distance * 64;
 	while(x <= WINDOW_WIDTH)
 	{
 		y = 0;
 		w = 0;
+		f = 0;
 		center = WINDOW_HEIGHT / 2;
-		dist_plane = center / tan(degree_to_radian(30));
+		dist_plane = fabs(160 / tan(degree_to_radian(30)));
 		slice_height = 64 / data->distance * dist_plane;
-		dist_before_wall = center - slice_height / 2;
+		printf("height = %f\n", slice_height);
+		dist_before_wall = center - (slice_height / 2);
 		//printf("Center = %f | Slice_height = %f | Distance = %f | Dist_plane = %f | Dist_before_wall = %f\n", center, slice_height / 2, data->distance, dist_plane, dist_before_wall);
-		while(y <= dist_before_wall)
+		//printf("Center = %f | Dist_before_wall = %f | Slice Height = %f\n", center, dist_before_wall, slice_height);
+		while(y <= floor(dist_before_wall))
 		{
 			my_mlx_pixel_put(data, x, y, 0x000000);
 			y++;
 		}
-		//printf("---------here--------\n");
+		//printf("Y = %d\n", y);
 		while(w <= slice_height)
 		{
 			my_mlx_pixel_put(data, x, w + y, 0xFF0000);
@@ -342,28 +350,27 @@ void	find_distance(t_data *data)
 		
 	dist_hz = sqrt(pow(data->player_x - data->hz.tx, 2) + pow(data->player_y - data->hz.ty, 2));
 	dist_vt = sqrt(pow(data->player_x - data->vt.tx, 2) + pow(data->player_y - data->vt.ty, 2));
-	printf("hz = %f | vt = %f\n", dist_hz * 64, dist_vt * 64);
 	if (dist_hz == 0.0)
 	{
-		draw_rayon(data, data->vt.tx, data->vt.ty);
+		//draw_rayon(data, data->vt.tx, data->vt.ty);
 		data->distance = dist_vt;
 		return ;
 	}
 	if (dist_vt == 0.0)
 	{
-		draw_rayon(data, data->hz.tx, data->hz.ty);
+		//draw_rayon(data, data->hz.tx, data->hz.ty);
 		data->distance = dist_hz;
 		return ;
 	}
 	if (dist_hz < dist_vt)
 	{
 		data->distance = dist_hz;
-		draw_rayon(data, data->hz.tx, data->hz.ty);
+		//draw_rayon(data, data->hz.tx, data->hz.ty);
 	}
 	else
 	{
 		data->distance = dist_vt;
-		draw_rayon(data, data->vt.tx, data->vt.ty);
+		//draw_rayon(data, data->vt.tx, data->vt.ty);
 	}
 }
 

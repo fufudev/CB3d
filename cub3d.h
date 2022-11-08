@@ -27,8 +27,8 @@
 # define RIGHT 124
 # define LEFT_L 65361
 # define RIGHT_L 65363
-# define WINDOW_WIDTH 1280
-# define WINDOW_HEIGHT 720
+# define WINDOW_WIDTH 320
+# define WINDOW_HEIGHT 200
 
 typedef struct s_img {
 	void	*img;
