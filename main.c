@@ -6,7 +6,7 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 10:49:24 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/07 12:18:49 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/09 15:15:02 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	init_img(t_data *data)
 	double	offset;
 	int		x;
 	double	center;
-	
+
 	center = WINDOW_WIDTH / 2;
 	data->line_height = (64 * WINDOW_HEIGHT) / data->distance;
 	printf("Line height : %f\n", data->line_height);
@@ -98,45 +98,75 @@ void	init_img(t_data *data)
 
 void	remove_distorsion(t_data *data)
 {
-	data->distance = data->distance * cos(degree_to_radian(30));
+	if (data->tmp_angle >= data->player_angle)
+		data->distance = data->distance * cos(degree_to_radian(data->tmp_angle - data->player_angle));
+	else
+		data->distance = data->distance * cos(degree_to_radian(data->player_angle - data->tmp_angle));
 }
 
-void	draw_3D(t_data *data) // TEST 1 RENDU 3D
+void	fov_3d(t_data *data)
+{
+	int		x;
+
+	data->img = mlx_new_image(data->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT);
+	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
+	x = 0;
+	data->tmp_angle = data->player_angle + (FOV / 2);
+	printf("Start Angle FOV : %f\n", data->tmp_angle);
+	while (x <= WINDOW_WIDTH)
+	{
+		if (data->tmp_angle > 360)
+			data->tmp_angle = data->tmp_angle - 360;
+		if (data->tmp_angle < 0)
+			data->tmp_angle = 360 + data->tmp_angle;
+		find_vertical_intersection(data);
+		find_horizontal_intersection(data);
+		find_distance(data);
+		remove_distorsion(data);
+		draw_3D(data, x);
+		data->tmp_angle = data->tmp_angle - 0.046875;
+		x++;
+	}
+	printf("End Angle FOV : %f\n", data->tmp_angle);
+	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img, 0, 0);
+}
+
+void	draw_3D(t_data *data, int x)
 {
 	double	slice_height;
-	int		x;
 	int		y;
 	int		w;
-	int		f;
 	double	center;
 	double	dist_plane;
 	double 	dist_before_wall;
 
-	x = 0;
-	while(x <= WINDOW_WIDTH)
+	center = WINDOW_HEIGHT / 2;
+	dist_plane = fabs((WINDOW_WIDTH / 2) / tan(degree_to_radian(FOV / 2)));
+	slice_height = ceil((64 / data->distance) * dist_plane);
+	if (slice_height > WINDOW_HEIGHT)
+		slice_height = WINDOW_HEIGHT - 1;
+	dist_before_wall = center - (slice_height / 2);
+	y = 0;
+	w = 0;
+	//printf("Center = %f | Slice_height = %f | Distance = %f | Dist_plane = %f | Dist_before_wall = %f\n", center, slice_height, data->distance, dist_plane, dist_before_wall);
+
+	printf("here 1\n");
+	while (y <= floor(dist_before_wall))
 	{
-		y = 0;
-		w = 0;
-		f = 0;
-		center = WINDOW_HEIGHT / 2;
-		dist_plane = fabs(160 / tan(degree_to_radian(30)));
-		slice_height = 64 / data->distance * dist_plane;
-		printf("height = %f\n", slice_height);
-		dist_before_wall = center - (slice_height / 2);
-		//printf("Center = %f | Slice_height = %f | Distance = %f | Dist_plane = %f | Dist_before_wall = %f\n", center, slice_height / 2, data->distance, dist_plane, dist_before_wall);
-		//printf("Center = %f | Dist_before_wall = %f | Slice Height = %f\n", center, dist_before_wall, slice_height);
-		while(y <= floor(dist_before_wall))
-		{
-			my_mlx_pixel_put(data, x, y, 0x000000);
-			y++;
-		}
-		//printf("Y = %d\n", y);
-		while(w <= slice_height)
-		{
-			my_mlx_pixel_put(data, x, w + y, 0xFF0000);
-			w++;
-		}
-		x++;
+		my_mlx_pixel_put(data, x, y, 0x000000);
+		y++;
+	}
+	printf("here 2\n");
+	while (w <= slice_height && w + y < WINDOW_HEIGHT)
+	{
+		my_mlx_pixel_put(data, x, w + y, 0xFF0000);
+		w++;
+	}
+	printf("here 3\n");
+	while (w + y < WINDOW_HEIGHT)
+	{
+		my_mlx_pixel_put(data, x, w + y, 0xFFF000);
+		w++;
 	}
 }
 
@@ -197,7 +227,7 @@ void	window(t_data *data)
 	data->win_ptr = mlx_new_window(data->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT, "CUB3D");
 	if (!data->win_ptr)
 		ft_msg_free(data->map, "Error\nPB WINDOWS\n");
-}	
+}
 
 
 double	degree_to_radian(double r)
@@ -281,13 +311,13 @@ void	find_horizontal_intersection(t_data *data)
 	init_coordinates_horizontal(data, &data->hz.ya, &data->hz.ay);
 	data->hz.xa = -(data->hz.ya) / tan(degree_to_radian(data->tmp_angle));
 	data->hz.ty = data->hz.ay;
-	data->hz.tx = data->player_x + (data->player_y - data->hz.ay) / 
+	data->hz.tx = data->player_x + (data->player_y - data->hz.ay) /
 						tan(degree_to_radian(data->tmp_angle));
 	if (check_hz_broke(data))
 		return ;
 	while (data->s_map[(int)floor(data->hz.ty / 64.0)][(int)floor(data->hz.tx / 64.0)] != '1')
 	{
-		data->hz.ax = data->player_x + (data->player_y - data->hz.ay) / 
+		data->hz.ax = data->player_x + (data->player_y - data->hz.ay) /
 						tan(degree_to_radian(data->tmp_angle));
 		data->hz.ty = data->hz.ay + data->hz.ya;
 		data->hz.tx = data->hz.ax + data->hz.xa;
@@ -347,9 +377,10 @@ void	find_distance(t_data *data)
 {
 	double dist_hz;
 	double dist_vt;
-		
+
 	dist_hz = sqrt(pow(data->player_x - data->hz.tx, 2) + pow(data->player_y - data->hz.ty, 2));
 	dist_vt = sqrt(pow(data->player_x - data->vt.tx, 2) + pow(data->player_y - data->vt.ty, 2));
+	//printf("hz = %f | vt = %f\n", dist_hz * 64, dist_vt * 64);
 	if (dist_hz == 0.0)
 	{
 		//draw_rayon(data, data->vt.tx, data->vt.ty);
@@ -376,7 +407,7 @@ void	find_distance(t_data *data)
 
 void	left_right(int keycode, t_data *data)
 {
-	if (keycode == LEFT)
+	if (keycode == LEFT_L)
 	{
 		if (data->player_angle + 3 > 360)
 		{
@@ -386,7 +417,7 @@ void	left_right(int keycode, t_data *data)
 		else
 			data->player_angle += 3;
 	}
-	if (keycode == RIGHT)
+	if (keycode == RIGHT_L)
 	{
 		if (data->player_angle - 3 < 0)
 		{
@@ -482,14 +513,15 @@ void	step_side(int keycode, t_data *data)
 
 int	key_hook(int keycode, t_data *data)
 {
-	if (keycode == LEFT || keycode == RIGHT)
+	if (keycode == LEFT_L || keycode == RIGHT_L) // LEFT ET RIGHT
 		left_right(keycode, data);
 	if (keycode == W || keycode == S)
 		up_back(keycode, data);
 	if (keycode == A || keycode == D)
 		step_side(keycode, data);
 	mlx_destroy_image(data->mlx_ptr, data->img);
-	find_and_draw(data);
+	fov_3d(data);
+	//find_and_draw(data);
 	return (0);
 }
 
@@ -513,14 +545,13 @@ void	find_and_draw(t_data *data)
 		find_distance(data);
 		data->tmp_angle += 3;
 		steps++;
-		draw_3D(data);
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img, 0, 0);
 }
 
 void	event(t_data *data)
 {
-	mlx_hook(data->win_ptr, 2, 0, key_hook, data); // CHANGEZ KEYPRESS KEYPRESSMASK
+	mlx_hook(data->win_ptr, KeyPress, KeyPressMask, key_hook, data); // CHANGEZ KEYPRESS KEYPRESSMASK par 2 et 0
 	//mlx_hook(data->win_ptr, 17, 0, closewd, data);
 	mlx_loop(data->mlx_ptr);
 }
@@ -540,7 +571,8 @@ void	draw_column(t_data *data, int x)
 void	start_display(t_data *data)
 {
 	window(data);
-	find_and_draw(data);
+	fov_3d(data);
+	//find_and_draw(data);
 	event(data);
 }
 
