@@ -6,7 +6,7 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 11:34:25 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/04 20:08:05 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/09 20:45:54 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,5 @@ void	init_id(t_data *data)
 	data->pos_y = 0;
 	data->player_y = 0;
 	data->player_x = 0;
-	data->speed = 3;
+	data->speed = 10;
 }

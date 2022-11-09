@@ -6,7 +6,7 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 10:49:24 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/09 15:15:02 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/09 21:00:44 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,8 +112,7 @@ void	fov_3d(t_data *data)
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
 	x = 0;
 	data->tmp_angle = data->player_angle + (FOV / 2);
-	printf("Start Angle FOV : %f\n", data->tmp_angle);
-	while (x <= WINDOW_WIDTH)
+	while (x < WINDOW_WIDTH)
 	{
 		if (data->tmp_angle > 360)
 			data->tmp_angle = data->tmp_angle - 360;
@@ -127,7 +126,6 @@ void	fov_3d(t_data *data)
 		data->tmp_angle = data->tmp_angle - 0.046875;
 		x++;
 	}
-	printf("End Angle FOV : %f\n", data->tmp_angle);
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img, 0, 0);
 }
 
@@ -149,20 +147,16 @@ void	draw_3D(t_data *data, int x)
 	y = 0;
 	w = 0;
 	//printf("Center = %f | Slice_height = %f | Distance = %f | Dist_plane = %f | Dist_before_wall = %f\n", center, slice_height, data->distance, dist_plane, dist_before_wall);
-
-	printf("here 1\n");
-	while (y <= floor(dist_before_wall))
+	while (y < dist_before_wall)
 	{
 		my_mlx_pixel_put(data, x, y, 0x000000);
 		y++;
 	}
-	printf("here 2\n");
-	while (w <= slice_height && w + y < WINDOW_HEIGHT)
+	while (w < slice_height && w + y < WINDOW_HEIGHT)
 	{
 		my_mlx_pixel_put(data, x, w + y, 0xFF0000);
 		w++;
 	}
-	printf("here 3\n");
 	while (w + y < WINDOW_HEIGHT)
 	{
 		my_mlx_pixel_put(data, x, w + y, 0xFFF000);
@@ -240,7 +234,7 @@ void	init_coordinates_horizontal(t_data *data, double *ya, double *ay)
 	if (data->tmp_angle >= 0.0 && data->tmp_angle < 180.0)
 	{
 		*ya = -64.0;
-		*ay = floor(data->player_y / 64.0) * (64.0) - 1.0;
+		*ay = floor(data->player_y / 64.0) * (64.0) - 0.00000001;
 	}
 	else
 	{
@@ -259,7 +253,7 @@ void	init_coordinates_vertical(t_data *data, double *xa, double *ax)
 	else
 	{
 		*xa = -64.0;
-		*ax = floor(data->player_x / 64.0) * (64.0) - 1.0;
+		*ax = floor(data->player_x / 64.0) * (64.0) - 0.00000001;
 	}
 }
 
@@ -285,24 +279,16 @@ int	ft_biglen(char **s)
 
 int	check_hz_broke(t_data *data)
 {
-	if (!(floor(data->hz.tx / 64.0) > 0 && floor(data->hz.tx / 64.0) < ft_biglen(data->s_map) - 1))
-	{
-		data->hz.ty = data->player_y;
-		data->hz.tx = data->player_x;
+	if (!(floor(data->hz.tx / 64.0) >= 0 && floor(data->hz.tx / 64.0) < ft_biglen(data->s_map) - 1))
 		return (1);
-	}
+
 	return (0);
 }
-
 
 int	check_vt_broke(t_data *data)
 {
 	if (!(floor(data->vt.ty / 64.0) >= 0 && floor(data->vt.ty / 64.0) < ft_strlen2d(data->s_map) - 1))
-	{
-		data->vt.ty = data->player_y;
-		data->vt.tx = data->player_x;
 		return (1);
-	}
 	return (0);
 }
 
@@ -378,9 +364,14 @@ void	find_distance(t_data *data)
 	double dist_hz;
 	double dist_vt;
 
+	//printf("hz tx : %f hz ty : %f\n",data->hz.tx, data->hz.ty);
+	//printf("player x : %fplayer y : %f\n",data->player_x, data->player_y);
 	dist_hz = sqrt(pow(data->player_x - data->hz.tx, 2) + pow(data->player_y - data->hz.ty, 2));
 	dist_vt = sqrt(pow(data->player_x - data->vt.tx, 2) + pow(data->player_y - data->vt.ty, 2));
-	//printf("hz = %f | vt = %f\n", dist_hz * 64, dist_vt * 64);
+	if (dist_hz == 0.0 && dist_vt == 0.0)
+	{
+		printf("--here--\n");
+	}
 	if (dist_hz == 0.0)
 	{
 		//draw_rayon(data, data->vt.tx, data->vt.ty);
@@ -531,7 +522,7 @@ void	find_and_draw(t_data *data)
 
 	data->img = mlx_new_image(data->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
-	//draw_map(data->s_map, data);
+	draw_map(data->s_map, data);
 	data->tmp_angle = data->player_angle - (FOV / 2);
 	steps = 1;
 	while (steps <= FOV / 3)
