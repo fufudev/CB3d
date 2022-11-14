@@ -27,8 +27,8 @@
 # define RIGHT 124
 # define LEFT_L 65361
 # define RIGHT_L 65363
-# define WINDOW_WIDTH 320
-# define WINDOW_HEIGHT 200
+# define WINDOW_WIDTH 1280
+# define WINDOW_HEIGHT 720
 
 typedef struct s_img {
 	void	*img;
@@ -52,6 +52,8 @@ typedef struct s_data
 {
 	char	**map;
 	char	**s_map;
+	int		ceiling[3];
+	int		floor[3];
 	int		no;
 	int		so;
 	int		we;
@@ -68,6 +70,7 @@ typedef struct s_data
 	double	tmp_angle;
 	double	distance;
 	double	line_height;
+	int		orientation;
 	int		speed;
 	void	*mlx_ptr;
 	void	*win_ptr;
@@ -80,6 +83,10 @@ typedef struct s_data
 	size_t	len;
 	t_point	vt;
 	t_point	hz;
+	t_img	no;
+	t_img	so;
+	t_img	we;
+	t_img	ea;
 }	t_data;
 
 typedef struct s_parsing
@@ -143,7 +150,9 @@ int		draw_again(t_data *data);
 void	finding_wall(t_data *data);
 void	find_horizontal_intersection(t_data *data);
 void	find_vertical_intersection(t_data *data);
-void	draw_3D(t_data *data);
+void	draw_3D(t_data *data, int x);
 void	draw_column(t_data *data, int x);
 void	find_and_draw(t_data *data);
+void	find_distance(t_data *data);
+
 #endif

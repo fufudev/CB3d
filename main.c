@@ -6,11 +6,110 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 10:49:24 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/10 12:09:47 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/14 09:58:59 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+
+int	ft_save(char *s, t_data *data, int indic, int array)
+{
+	int i;
+	int nb;
+	char *tmp;
+	int tmp_atoi;
+
+	i = 0;
+	nb = 1;
+	tmp = NULL;
+	while(s[i])
+	{
+		if (ft_isdigit(s[i]) == 1)
+			nb++;
+		if (s[i] == ',' || (array == 2 && (i == ft_strlen(s) - 1)))
+		{
+			tmp = malloc(sizeof(char) * nb);
+			ft_strlcpy(tmp, s, nb);
+			tmp_atoi = ft_atoi(tmp);
+			free(tmp);
+			if (indic == 1)
+				data->ceiling[array] = tmp_atoi;
+			if (indic == 0)
+				data->floor[array] = tmp_atoi;
+			return (nb);
+		}
+		i++;
+	}
+	return(nb);
+}
+
+void	ft_save_f(char *s, t_data *data)
+{
+	int i;
+	int array;
+
+	i = 0;
+	array = 0;
+	while(s[i])
+	{
+		if (ft_isdigit(s[i]) == 1)
+		{
+			i = i + ft_save(&s[i], data, 0, array);
+			array++;
+			if (i > (int)ft_strlen(s) - 1)
+				return ;
+			continue;
+		}
+		i++;
+	}
+}
+
+void	ft_save_c(char *s, t_data *data)
+{
+	int i;
+	int array;
+
+	i = 0;
+	array = 0;
+	while(s[i])
+	{
+		if (ft_isdigit(s[i]) == 1)
+		{
+			i = i + ft_save(&s[i], data, 1, array);
+			array++;
+			if (i > (int)ft_strlen(s) - 1)
+				return ;
+			continue;
+		}
+		i++;
+	}
+}
+
+void	ft_save_data(t_data *data)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while(data->map[i])
+	{
+		j = 0;
+		while (data->map[i][j])
+		{
+			if (ft_isalpha(data->map[i][j]) == 1)
+			{
+				if (ft_strncmp(&data->map[i][j], "F", 1) == 0)
+					ft_save_f(data->map[i], data);
+				if (ft_strncmp(&data->map[i][j], "C", 1) == 0)
+					ft_save_c(data->map[i], data);
+				break;
+			}
+			j++;
+		}
+		i++;
+	}
+}
 
 void	start_parsing(t_data *data, t_parsing *parse, char **argv)
 {
@@ -18,6 +117,7 @@ void	start_parsing(t_data *data, t_parsing *parse, char **argv)
 	ft_check_file(parse, argv);
 	ft_read_map(data, parse);
 	ft_check_id(data, parse);
+	ft_save_data(data);
 }
 
 int	is_player(char c)
@@ -79,23 +179,6 @@ void	init_img(t_data *data)
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
 }
 
-/*void	draw_3D(t_data *data)
-{
-	double	offset;
-	int		x;
-	double	center;
-
-	center = WINDOW_WIDTH / 2;
-	data->line_height = (64 * WINDOW_HEIGHT) / data->distance;
-	printf("Line height : %f\n", data->line_height);
-	offset = WINDOW_HEIGHT - data->line_height / 2;
-	if (data->line_height > WINDOW_HEIGHT)
-		data->line_height = WINDOW_HEIGHT;
-	draw_column(data, x);
-	//while(x <= WINDOW_WIDTH)
-	//	draw_column(data, x++);
-}*/
-
 void	remove_distorsion(t_data *data)
 {
 	if (data->tmp_angle >= data->player_angle)
@@ -129,6 +212,51 @@ void	fov_3d(t_data *data)
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img, 0, 0);
 }
 
+int	rgb_to_int(int *tab)
+{
+	return (65536 * tab[0] + 256 * tab[1] + tab[2]);
+}
+
+int	get_texture(t_data* data, int orientation)
+{
+	if (orientation == 0)
+	{
+		mlx_xpm_file_to_image(data->mlx_ptr, , 64, 64)
+	}
+}
+
+int	get_texture_color(t_data *data)
+{
+	if (data->tmp_angle <= 90 && data->tmp_angle >= 0)
+	{
+		if (orientation)
+			return get_texture(0);
+		else
+			texture_sud
+	}
+	else if (data->tmp_angle <= 180 && data->tmp_angle > 90)
+	{
+		if (orientation)
+			texture_est
+		else
+			texture_sud
+	}
+	else if (data->tmp_angle > 180 && data->tmp_angle <= 270)
+	{
+		if (orientation)
+			texture_est
+		else
+			texture_nord
+	}
+	else
+	{
+		if (orientation)
+			texture_west
+		else
+			texture_nord
+	}
+}
+
 void	draw_3D(t_data *data, int x)
 {
 	double	slice_height;
@@ -146,20 +274,19 @@ void	draw_3D(t_data *data, int x)
 	dist_before_wall = center - (slice_height / 2);
 	y = 0;
 	w = 0;
-	//printf("Center = %f | Slice_height = %f | Distance = %f | Dist_plane = %f | Dist_before_wall = %f\n", center, slice_height, data->distance, dist_plane, dist_before_wall);
-	while (y < dist_before_wall)
+	while (y < floor(dist_before_wall))
 	{
-		my_mlx_pixel_put(data, x, y, 0x000000);
+		my_mlx_pixel_put(data, x, y, rgb_to_int(data->ceiling));
 		y++;
 	}
-	while (w < slice_height && w + y < WINDOW_HEIGHT)
+	while (w <= slice_height && w + y < WINDOW_HEIGHT)
 	{
-		my_mlx_pixel_put(data, x, w + y, 0xFF0000);
+		my_mlx_pixel_put(data, x, w + y, get_texture());
 		w++;
 	}
 	while (w + y < WINDOW_HEIGHT)
 	{
-		my_mlx_pixel_put(data, x, w + y, 0xFFF000);
+		my_mlx_pixel_put(data, x, w + y, rgb_to_int(data->floor));
 		w++;
 	}
 }
@@ -279,9 +406,13 @@ int	ft_biglen(char **s)
 
 int	check_hz_broke(t_data *data)
 {
-	if (!(floor(data->hz.tx / 64.0) >= 0 && floor(data->hz.tx / 64.0) < ft_biglen(data->s_map) - 1))
+	if ((floor(data->hz.tx / 64.0) <= 0) || (floor(data->hz.tx / 64.0) > ft_biglen(data->s_map) - 1))
 		return (1);
-
+	if ((size_t)(floor(data->hz.ty / 64) <= ft_strlen2d(data->s_map) - 1))
+	{
+		if ((size_t)(floor(data->hz.tx / 64.0) >= ft_strlen(data->s_map[(int)(floor(data->hz.ty / 64))] - 1)))
+			return (1);
+	}
 	return (0);
 }
 
@@ -294,6 +425,9 @@ int	check_vt_broke(t_data *data)
 
 void	find_horizontal_intersection(t_data *data)
 {
+	int check;
+
+	check = 0;
 	init_coordinates_horizontal(data, &data->hz.ya, &data->hz.ay);
 	data->hz.xa = -(data->hz.ya) / tan(degree_to_radian(data->tmp_angle));
 	data->hz.ty = data->hz.ay;
@@ -301,7 +435,9 @@ void	find_horizontal_intersection(t_data *data)
 						tan(degree_to_radian(data->tmp_angle));
 	if (check_hz_broke(data))
 		return ;
-	while (data->s_map[(int)floor(data->hz.ty / 64.0)][(int)floor(data->hz.tx / 64.0)] != '1')
+	while (data->s_map[(int)floor(data->hz.ty / 64.0)][(int)floor(data->hz.tx / 64.0)] != '1' 
+			&& data->s_map[(int)floor(data->hz.ty / 64.0)][(int)floor(data->hz.tx / 64.0)] != ' ' 
+				&& data->s_map[(int)floor(data->hz.ty / 64.0)][(int)floor(data->hz.tx / 64.0)] != '\0')
 	{
 		data->hz.ax = data->player_x + (data->player_y - data->hz.ay) /
 						tan(degree_to_radian(data->tmp_angle));
@@ -311,7 +447,9 @@ void	find_horizontal_intersection(t_data *data)
 		data->hz.ax = data->hz.tx;
 		if (check_hz_broke(data))
 			return ;
+		check = 1;
 	}
+	check = 0;
 }
 
 void	find_vertical_intersection(t_data *data)
@@ -323,7 +461,9 @@ void	find_vertical_intersection(t_data *data)
 	data->vt.tx = data->vt.ax ;
 	if (check_vt_broke(data) == 1)
 		return ;
-	while (data->s_map[(int)floor(data->vt.ty / 64.0)][(int)floor(data->vt.tx / 64.0)] != '1')
+	while (data->s_map[(int)floor(data->vt.ty / 64.0)][(int)floor(data->vt.tx / 64.0)] != '1' 
+			&& data->s_map[(int)floor(data->vt.ty / 64.0)][(int)floor(data->vt.tx / 64.0)] != ' ' 
+				&& data->s_map[(int)floor(data->vt.ty / 64.0)][(int)floor(data->vt.tx / 64.0)] != '\0')
 	{
 		data->vt.ay = data->player_y + (data->player_x - data->vt.ax)
 							* tan(degree_to_radian(data->tmp_angle));
@@ -359,46 +499,49 @@ void	draw_rayon(t_data *data, double wall_x, double wall_y)
 	}
 }
 
+void	save_distance(t_data *data, double x, double y, int orientation)
+{
+	data->pos_x = x;
+	data->pos_y = y;
+	data->orientation = orientation;
+}
+
 void	find_distance(t_data *data)
 {
 	double dist_hz;
 	double dist_vt;
 
-	//printf("hz tx : %f hz ty : %f\n",data->hz.tx, data->hz.ty);
-	//printf("player x : %fplayer y : %f\n",data->player_x, data->player_y);
 	dist_hz = sqrt(pow(data->player_x - data->hz.tx, 2) + pow(data->player_y - data->hz.ty, 2));
 	dist_vt = sqrt(pow(data->player_x - data->vt.tx, 2) + pow(data->player_y - data->vt.ty, 2));
-	if (dist_hz == 0.0 && dist_vt == 0.0)
-	{
-		printf("--here--\n");
-	}
 	if (dist_hz == 0.0)
 	{
-		//draw_rayon(data, data->vt.tx, data->vt.ty);
 		data->distance = dist_vt;
+		save_distance(data, data->vt.tx, data->vt.ty, 1);
 		return ;
 	}
 	if (dist_vt == 0.0)
 	{
-		//draw_rayon(data, data->hz.tx, data->hz.ty);
 		data->distance = dist_hz;
+		save_distance(data, data->hz.tx, data->hz.ty, 0);
 		return ;
 	}
 	if (dist_hz < dist_vt)
 	{
 		data->distance = dist_hz;
+		save_distance(data, data->hz.tx, data->hz.ty, 0);
 		//draw_rayon(data, data->hz.tx, data->hz.ty);
 	}
 	else
 	{
 		data->distance = dist_vt;
+		save_distance(data, data->vt.tx, data->vt.ty, 1);
 		//draw_rayon(data, data->vt.tx, data->vt.ty);
 	}
 }
 
 void	left_right(int keycode, t_data *data)
 {
-	if (keycode == LEFT_L)
+	if (keycode == LEFT)
 	{
 		if (data->player_angle + 3 > 360)
 		{
@@ -408,7 +551,7 @@ void	left_right(int keycode, t_data *data)
 		else
 			data->player_angle += 3;
 	}
-	if (keycode == RIGHT_L)
+	if (keycode == RIGHT)
 	{
 		if (data->player_angle - 3 < 0)
 		{
@@ -504,7 +647,7 @@ void	step_side(int keycode, t_data *data)
 
 int	key_hook(int keycode, t_data *data)
 {
-	if (keycode == LEFT_L || keycode == RIGHT_L) // LEFT ET RIGHT
+	if (keycode == LEFT || keycode == RIGHT) // LEFT ET RIGHT
 		left_right(keycode, data);
 	if (keycode == W || keycode == S)
 		up_back(keycode, data);
@@ -542,14 +685,14 @@ void	find_and_draw(t_data *data)
 
 void	event(t_data *data)
 {
-	mlx_hook(data->win_ptr, KeyPress, KeyPressMask, key_hook, data); // CHANGEZ KEYPRESS KEYPRESSMASK par 2 et 0
+	mlx_hook(data->win_ptr, 2, 0, key_hook, data); // CHANGEZ KEYPRESS KEYPRESSMASK par 2 et 0
 	//mlx_hook(data->win_ptr, 17, 0, closewd, data);
 	mlx_loop(data->mlx_ptr);
 }
 
 void	draw_column(t_data *data, int x)
 {
-	int	y;
+	long	y;
 
 	y = 0;
 	while (y < data->line_height)

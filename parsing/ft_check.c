@@ -60,13 +60,13 @@ void	ft_check_first_line(char *map, t_data *data)
 		if (map[i] == '1')
 			continue ;
 		else
-			ft_msg_free(data->map, "Error\nCheck the wall\n");
+			ft_msg_free(data->map, "Error\nYou have space after the wall and nothing behind. Delete it !\n");
 	}
 	i = ft_strlen(map) - 1;
 	while (i > 0)
 	{
 		if (ft_is_whitespace(map[i]) == 1)
-			ft_msg_free(data->map, "Error\nCheck the wall 2.\n");
+			ft_msg_free(data->map, "Error\nYou have space after the wall and nothing behind ! Its should be on the first or last line. Delete it !\n");
 		if (map[i] == '1')
 			break ;
 		i--;
@@ -106,5 +106,5 @@ int	ft_check_line(char **map, int i, int j, t_data *data)
 void	ft_check_endline(char **map, t_data *data)
 {
 	if (data->newline != ft_strlen2d(map) - 1)
-		ft_msg_free(data->map, "Error\nMap incorrect....\n");
+		ft_msg_free(data->map, "Error\nCarefull a empty line was detected.\n");
 }

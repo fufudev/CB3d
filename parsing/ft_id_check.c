@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_id_check.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffiliz <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 11:16:00 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/07/15 11:28:41 by ffiliz           ###   ########.fr       */
+/*   Updated: 2022/11/14 10:03:46 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,26 +63,30 @@ int	ft_id_is_true(char *str, t_data *data)
 	if (ft_strncmp(str, "NO ", 3) == 0 && data->no == 0)
 	{
 		data->no = 1;
+		get_texture_filename();
 		return (ft_path(&str[3], data));
 	}
 	else if (ft_strncmp(str, "SO ", 3) == 0 && data->so == 0)
 	{
 		data->so = 1;
+		get_texture_filename();
 		return (ft_path(&str[3], data));
 	}
 	else if (ft_strncmp(str, "WE ", 3) == 0 && data->we == 0)
 	{
 		data->we = 1;
+		get_texture_filename();
 		return (ft_path(&str[3], data));
 	}
 	else if (ft_strncmp(str, "EA ", 3) == 0 && data->ea == 0)
 	{
 		data->ea = 1;
+		get_texture_filename();
 		return (ft_path(&str[3], data));
 	}
 	if (ft_id_is_true_part_2(str, data) == 1)
 		return (1);
-	ft_msg_free(data->map, "Error\nMap false.\n");
+	ft_msg_free(data->map, "Error\nCheck the ID in the map.\n");
 	return (0);
 }
 

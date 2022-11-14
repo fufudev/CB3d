@@ -88,7 +88,7 @@ void	ft_check_map(char **map, t_data *data, t_parsing *parse)
 				continue ;
 			if (i != 0 && i != ft_strlen2d(map) - 1)
 				if (ft_check_line(map, i, j, data) == 1)
-					ft_msg_free(data->map, "Error\nMap incorrect..\n");
+					ft_msg_free(data->map, "Error\nIn the map you have a wrong alpha.\n");
 			if (wall == 0 && ft_check_wall(map[i], j, data) == 0)
 				wall = 1;
 		}
@@ -101,9 +101,9 @@ int	ft_check_wall(char *map, int i, t_data *data)
 
 	len = ft_strlen(map);
 	if (map[i] != '1')
-		ft_msg_free(data->map, "Error\nCheck Wall\n");
+		ft_msg_free(data->map, "Error\nYou have space after the wall and nothing behind. Delete it !\n");
 	if (map[len - 1] != '1')
-		ft_msg_free(data->map, "Error\nCheck Wall\n");
+		ft_msg_free(data->map, "Error\nYou have space after the wall and nothing behind. Delete it !\n");
 	return (0);
 }
 
