@@ -6,7 +6,7 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 11:16:00 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/14 10:03:46 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/14 12:21:35 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,35 +58,74 @@ int	ft_id_is_true_part_2(char *str, t_data *data)
 	return (0);
 }
 
-int	ft_id_is_true(char *str, t_data *data)
+char	*get_txt_name(char *str, t_data *data)
 {
-	if (ft_strncmp(str, "NO ", 3) == 0 && data->no == 0)
+	int	i;
+	int begin;
+	char *filename;
+
+	i = 0;
+	while (str[i++])
 	{
-		data->no = 1;
-		get_texture_filename();
-		return (ft_path(&str[3], data));
+		if (ft_is_whitespace(str[i]) == 1 || str[i] == '/' || str[i] == '.')
+			continue ;
+		else
+			break ;
 	}
-	else if (ft_strncmp(str, "SO ", 3) == 0 && data->so == 0)
+	begin = i - 1;
+	if (ft_is_whitespace(str[i]) != 1)
 	{
-		data->so = 1;
-		get_texture_filename();
-		return (ft_path(&str[3], data));
+		while (str[i] && ft_is_whitespace(str[i]) == 0)
+			i++;
 	}
-	else if (ft_strncmp(str, "WE ", 3) == 0 && data->we == 0)
+	filename = malloc(i - begin + 1);
+	ft_strlcpy(filename, &str[begin], i + 1);
+	return (filename);
+}
+
+int	txt(char *str, int text, t_data *data)
+{
+	char *filename;
+
+	filename = get_txt_name(str, data);
+	if (open(filename, O_RDONLY) == -1)
+		ft_msg_free(data->map, "Error\nTexture not valid\n");
+	if (text == 0)
+		data->name_no = filename;
+	if (text == 1)
+		data->name_so = filename;
+	if (text == 2)
+		data->name_we = filename;
+	if (text == 3)
+		data->name_ea = filename;
+	return (1);
+}
+
+int	ft_id_is_true(char *str, t_data *d)
+{
+	if (ft_strncmp(str, "NO ", 3) == 0 && d->no == 0)
 	{
-		data->we = 1;
-		get_texture_filename();
-		return (ft_path(&str[3], data));
+		d->no = 1;
+		return (ft_path(&str[3], d) && txt(&str[3], 0, d));
 	}
-	else if (ft_strncmp(str, "EA ", 3) == 0 && data->ea == 0)
+	else if (ft_strncmp(str, "SO ", 3) == 0 && d->so == 0)
 	{
-		data->ea = 1;
-		get_texture_filename();
-		return (ft_path(&str[3], data));
+		d->so = 1;
+		return (ft_path(&str[3], d) && txt(&str[3], 1, d));
 	}
-	if (ft_id_is_true_part_2(str, data) == 1)
+	else if (ft_strncmp(str, "WE ", 3) == 0 && d->we == 0)
+	{
+		d->we = 1;
+		return (ft_path(&str[3], d) && txt(&str[3], 2, d));
+	}
+	else if (ft_strncmp(str, "EA ", 3) == 0 && d->ea == 0)
+	{
+		d->ea = 1;
+		return (ft_path(&str[3], d) && txt(&str[3], 3, d));
+	}
+	if (ft_id_is_true_part_2(str, d) == 1)
 		return (1);
-	ft_msg_free(data->map, "Error\nCheck the ID in the map.\n");
+	ft_msg_free(d->map, "Error\nCheck the ID in the map.\n");
 	return (0);
 }
 

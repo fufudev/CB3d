@@ -6,7 +6,7 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 11:34:25 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/09 20:45:54 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/14 11:51:39 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	init_value(int *i, int *good_value, int *indic)
 	*indic = 0;
 	*good_value = 0;
 }
+
 
 void	init_id(t_data *data)
 {

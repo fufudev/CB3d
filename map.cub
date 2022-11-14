@@ -1,7 +1,7 @@
-NO .xpm                           
-SO .xpm                                                     
-WE .xpm                                                                                                         
-EA .xpm                         
+SO xpm/South.xpm                                                     
+NO xpm/North.xpm                           
+WE xpm/West.xpm                                                                                                         
+EA xpm/East.xpm                         
 C 1,255,255
 F 222,1,254
 

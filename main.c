@@ -6,12 +6,39 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 10:49:24 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/14 09:58:59 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/14 12:21:53 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
+void	free_img_filename(t_data *data)
+{
+	free(data->name_no);
+	free(data->name_ea);
+	free(data->name_we);
+	free(data->name_so);
+}
+
+void	init_img_addr(t_data *data)
+{
+	int width;
+
+	width = 64;
+	data->no_img.img = mlx_xpm_file_to_image(data->mlx_ptr, data->name_no, &width, &width);
+	data->so_img.img = mlx_xpm_file_to_image(data->mlx_ptr, data->name_so, &width, &width);
+	data->we_img.img = mlx_xpm_file_to_image(data->mlx_ptr, data->name_we, &width, &width);
+	data->ea_img.img = mlx_xpm_file_to_image(data->mlx_ptr, data->name_ea, &width, &width);
+	free_img_filename(data);
+	data->no_img.addr = mlx_get_data_addr(data->mlx_ptr, &data->no_img.bits_per_pixel,
+		&data->no_img.line_length, &data->no_img.endian);
+	data->ea_img.addr = mlx_get_data_addr(data->mlx_ptr, &data->ea_img.bits_per_pixel,
+		&data->ea_img.line_length, &data->ea_img.endian);
+	data->we_img.addr = mlx_get_data_addr(data->mlx_ptr, &data->we_img.bits_per_pixel,
+		&data->we_img.line_length, &data->we_img.endian);
+	data->so_img.addr = mlx_get_data_addr(data->mlx_ptr, &data->so_img.bits_per_pixel,
+		&data->so_img.line_length, &data->so_img.endian);
+}
 
 int	ft_save(char *s, t_data *data, int indic, int array)
 {
@@ -151,6 +178,12 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
+void	draw_texture(t_data *data, int x, int y, t_img text)
+{
+	printf("Addr : %d\n", (int)ft_strlen(text.addr));
+	data->addr[(y * data->line_length + x * (data->bits_per_pixel / 8))] = text.addr[(y * text.line_length + x * (text.bits_per_pixel / 8)) % data->offset];
+}
+
 void	draw_rect(t_data *data, int x, int y, int color)
 {
 	int i;
@@ -216,21 +249,17 @@ int	rgb_to_int(int *tab)
 {
 	return (65536 * tab[0] + 256 * tab[1] + tab[2]);
 }
-
-int	get_texture(t_data* data, int orientation)
+/*
+int	get_texture_color(t_data *data, int orientation)
 {
-	if (orientation == 0)
-	{
-		mlx_xpm_file_to_image(data->mlx_ptr, , 64, 64)
-	}
-}
-
-int	get_texture_color(t_data *data)
-{
+	if (orientation)
+		data->offset = data->pos_y % 64;
+	else
+		data->offset = data->pos_x % 64;
 	if (data->tmp_angle <= 90 && data->tmp_angle >= 0)
 	{
 		if (orientation)
-			return get_texture(0);
+			return ((unsigned int)data->we_img.addr + data->offset);	
 		else
 			texture_sud
 	}
@@ -256,7 +285,7 @@ int	get_texture_color(t_data *data)
 			texture_nord
 	}
 }
-
+*/
 void	draw_3D(t_data *data, int x)
 {
 	double	slice_height;
@@ -281,7 +310,7 @@ void	draw_3D(t_data *data, int x)
 	}
 	while (w <= slice_height && w + y < WINDOW_HEIGHT)
 	{
-		my_mlx_pixel_put(data, x, w + y, get_texture());
+		draw_texture(data, x, w + y, data->no_img);
 		w++;
 	}
 	while (w + y < WINDOW_HEIGHT)
@@ -290,7 +319,6 @@ void	draw_3D(t_data *data, int x)
 		w++;
 	}
 }
-
 void	draw_player(t_data *data, int py, int px, int color)
 {
 	int i;
@@ -705,6 +733,7 @@ void	draw_column(t_data *data, int x)
 void	start_display(t_data *data)
 {
 	window(data);
+	init_img_addr(data);
 	fov_3d(data);
 	//find_and_draw(data);
 	event(data);

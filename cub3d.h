@@ -72,6 +72,7 @@ typedef struct s_data
 	double	line_height;
 	int		orientation;
 	int		speed;
+	int		offset;
 	void	*mlx_ptr;
 	void	*win_ptr;
 	void	*img;
@@ -83,10 +84,14 @@ typedef struct s_data
 	size_t	len;
 	t_point	vt;
 	t_point	hz;
-	t_img	no;
-	t_img	so;
-	t_img	we;
-	t_img	ea;
+	char	*name_no;
+	char	*name_so;
+	char	*name_we;
+	char	*name_ea;
+	t_img	no_img;
+	t_img	so_img;
+	t_img	we_img;
+	t_img	ea_img;
 }	t_data;
 
 typedef struct s_parsing
