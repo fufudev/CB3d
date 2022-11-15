@@ -91,13 +91,13 @@ int	txt(char *str, int text, t_data *data)
 	if (open(filename, O_RDONLY) == -1)
 		ft_msg_free(data->map, "Error\nTexture not valid\n");
 	if (text == 0)
-		data->name_no = filename;
+		data->f_no = filename;
 	if (text == 1)
-		data->name_so = filename;
+		data->f_so = filename;
 	if (text == 2)
-		data->name_we = filename;
+		data->f_we = filename;
 	if (text == 3)
-		data->name_ea = filename;
+		data->f_ea = filename;
 	return (1);
 }
 

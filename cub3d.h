@@ -81,17 +81,24 @@ typedef struct s_data
 	int		line_length;
 	int		endian;
 	int		big_len;
+	int		txt_x;
+	int		txt_y;
+	int		index;
 	size_t	len;
 	t_point	vt;
 	t_point	hz;
-	char	*name_no;
-	char	*name_so;
-	char	*name_we;
-	char	*name_ea;
-	t_img	no_img;
-	t_img	so_img;
-	t_img	we_img;
-	t_img	ea_img;
+	char	*f_no;//FILE
+	char	*f_so;
+	char	*f_we;
+	char	*f_ea;
+	int		*a_no;//ADRESS
+	int		*a_so;
+	int		*a_we;
+	int		*a_ea;
+	void	*no_img;//IMG
+	void	*so_img;
+	void	*we_img;
+	void	*ea_img;
 }	t_data;
 
 typedef struct s_parsing

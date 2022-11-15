@@ -14,30 +14,26 @@
 
 void	free_img_filename(t_data *data)
 {
-	free(data->name_no);
-	free(data->name_ea);
-	free(data->name_we);
-	free(data->name_so);
+	free(data->f_no);
+	free(data->f_ea);
+	free(data->f_we);
+	free(data->f_so);
 }
 
 void	init_img_addr(t_data *data)
 {
 	int width;
+	int height;
 
-	width = 64;
-	data->no_img.img = mlx_xpm_file_to_image(data->mlx_ptr, data->name_no, &width, &width);
-	data->so_img.img = mlx_xpm_file_to_image(data->mlx_ptr, data->name_so, &width, &width);
-	data->we_img.img = mlx_xpm_file_to_image(data->mlx_ptr, data->name_we, &width, &width);
-	data->ea_img.img = mlx_xpm_file_to_image(data->mlx_ptr, data->name_ea, &width, &width);
+	data->no_img = mlx_xpm_file_to_image(data->mlx_ptr, data->f_no, &width, &height);
+	data->so_img = mlx_xpm_file_to_image(data->mlx_ptr, data->f_so, &width, &height);
+	data->we_img = mlx_xpm_file_to_image(data->mlx_ptr, data->f_we, &width, &height);
+	data->ea_img = mlx_xpm_file_to_image(data->mlx_ptr, data->f_ea, &width, &height);
 	free_img_filename(data);
-	data->no_img.addr = mlx_get_data_addr(data->mlx_ptr, &data->no_img.bits_per_pixel,
-		&data->no_img.line_length, &data->no_img.endian);
-	data->ea_img.addr = mlx_get_data_addr(data->mlx_ptr, &data->ea_img.bits_per_pixel,
-		&data->ea_img.line_length, &data->ea_img.endian);
-	data->we_img.addr = mlx_get_data_addr(data->mlx_ptr, &data->we_img.bits_per_pixel,
-		&data->we_img.line_length, &data->we_img.endian);
-	data->so_img.addr = mlx_get_data_addr(data->mlx_ptr, &data->so_img.bits_per_pixel,
-		&data->so_img.line_length, &data->so_img.endian);
+	data->a_no = (int *)mlx_get_data_addr(data->no_img, &data->bits_per_pixel, &data->line_length, &data->endian);
+	data->a_so = (int *)mlx_get_data_addr(data->so_img, &data->bits_per_pixel, &data->line_length, &data->endian);
+	data->a_we = (int *)mlx_get_data_addr(data->we_img, &data->bits_per_pixel, &data->line_length, &data->endian);
+	data->a_ea = (int *)mlx_get_data_addr(data->ea_img, &data->bits_per_pixel, &data->line_length, &data->endian);
 }
 
 int	ft_save(char *s, t_data *data, int indic, int array)
@@ -178,11 +174,10 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-void	draw_texture(t_data *data, int x, int y, t_img text)
+/*void	draw_texture(t_data *data, int x, int y, void *text)
 {
-	printf("Addr : %d\n", (int)ft_strlen(text.addr));
 	data->addr[(y * data->line_length + x * (data->bits_per_pixel / 8))] = text.addr[(y * text.line_length + x * (text.bits_per_pixel / 8)) % data->offset];
-}
+}*/
 
 void	draw_rect(t_data *data, int x, int y, int color)
 {
@@ -249,43 +244,35 @@ int	rgb_to_int(int *tab)
 {
 	return (65536 * tab[0] + 256 * tab[1] + tab[2]);
 }
-/*
-int	get_texture_color(t_data *data, int orientation)
+
+
+void	get_color(t_data *data, int x, int y, int orientation)
 {
-	if (orientation)
-		data->offset = data->pos_y % 64;
-	else
-		data->offset = data->pos_x % 64;
-	if (data->tmp_angle <= 90 && data->tmp_angle >= 0)
+	int color;
+	
+	if ((data->tmp_angle >= 0 && data->tmp_angle <= 180) && orientation == 0)
 	{
-		if (orientation)
-			return ((unsigned int)data->we_img.addr + data->offset);	
-		else
-			texture_sud
+		color = data->a_no[data->txt_x + data->txt_y * 64];
+		my_mlx_pixel_put(data, x, y, color);
 	}
-	else if (data->tmp_angle <= 180 && data->tmp_angle > 90)
+	else if ((data->tmp_angle >= 180 && data->tmp_angle <= 360) && orientation == 0)
 	{
-		if (orientation)
-			texture_est
-		else
-			texture_sud
+		color = data->a_so[data->txt_x + data->txt_y * 64];
+		my_mlx_pixel_put(data, x, y, color);
 	}
-	else if (data->tmp_angle > 180 && data->tmp_angle <= 270)
+	else if ((data->tmp_angle >= 90 && data->tmp_angle <= 270) && orientation == 1)
 	{
-		if (orientation)
-			texture_est
-		else
-			texture_nord
+		color = data->a_we[data->txt_x + data->txt_y * 64];
+		my_mlx_pixel_put(data, x, y, color);
 	}
 	else
 	{
-		if (orientation)
-			texture_west
-		else
-			texture_nord
+		color = data->a_ea[data->txt_x + data->txt_y * 64];
+		my_mlx_pixel_put(data, x, y, color);
 	}
 }
-*/
+
+
 void	draw_3D(t_data *data, int x)
 {
 	double	slice_height;
@@ -310,7 +297,14 @@ void	draw_3D(t_data *data, int x)
 	}
 	while (w <= slice_height && w + y < WINDOW_HEIGHT)
 	{
-		draw_texture(data, x, w + y, data->no_img);
+		if (data->orientation == 0)
+			data->txt_x = fmod(data->pos_x / 64.0, 1.0) * 64.0;
+		if (data->orientation == 1)
+			data->txt_x = fmod(data->pos_y / 64.0, 1.0) * 64.0;
+		data->txt_y = ((1.0 - (double)(dist_before_wall - (w + y)))
+			/ slice_height) * 64.0;
+		data->index = data->txt_x + (data->txt_y * 64.0);
+		get_color(data, x, w + y, data->orientation);
 		w++;
 	}
 	while (w + y < WINDOW_HEIGHT)
