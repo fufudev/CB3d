@@ -46,14 +46,14 @@ int	ft_biglen(char **s)
 
 void	remove_distorsion(t_data *data)
 {
-	if (data->tmp_angle >= data->player_angle)
-	{
-		data->distance = data->distance
-			* cos(degree_to_radian(data->tmp_angle - data->player_angle));
-	}
-	else
-	{
+	//if (data->tmp_angle >= data->player_angle)
+	//{
+	//	data->distance = data->distance
+	//		* cos(degree_to_radian(data->tmp_angle - data->player_angle));
+	//}
+	//else
+	//{
 		data->distance = data->distance
 			* cos(degree_to_radian(data->player_angle - data->tmp_angle));
-	}
+	//}
 }

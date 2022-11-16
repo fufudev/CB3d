@@ -22,7 +22,7 @@ char	*ft_gnljoin(char *s1, char *s2)
 		s1 = ft_calloc(1, 1);
 	i = 0;
 	j = 0;
-	pt = malloc (sizeof (char *) * ft_strlen(s1) + ft_strlen(s2) + 1);
+	pt = (char *)malloc (sizeof (char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (pt == NULL)
 		return (NULL);
 	while (s1[i])

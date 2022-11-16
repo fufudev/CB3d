@@ -14,17 +14,17 @@
 
 void	ft_check_around(char **map, int i, int j, t_data *data)
 {
-	if (map[i + 1] && ft_strlen_int(map[i + 1])
-		>= ft_strlen_int(map[i]) && (size_t)i != ft_strlen2d(map))
+	if ((size_t)i != ft_strlen2d(map) && map[i + 1] && ft_strlen_int(map[i + 1])
+		>= ft_strlen_int(map[i]))
 		if (map[i + 1][j] != '1' && ft_is_whitespace(map[i + 1][j]) != 1)
 			ft_msg_free(data->map, "Error\nMap not close 1.\n");
-	if (map[i - 1] && ft_strlen_int(map[i - 1]) >= ft_strlen_int(map[i]) && i != 0)
+	if (i != 0 && map[i - 1] && ft_strlen_int(map[i - 1]) >= ft_strlen_int(map[i]))
 		if (map[i - 1][j] != '1' && ft_is_whitespace(map[i - 1][j]) != 1)
 			ft_msg_free(data->map, "Error\nMap not close 2.\n");
-	if (map[i] && map[i][j + 1] && j != (int)ft_strlen_int(map[i]))
+	if (map[i] && j != (int)ft_strlen_int(map[i]) && map[i][j + 1])
 		if (map[i][j + 1] != '1' && ft_is_whitespace(map[i][j + 1]) != 1)
 			ft_msg_free(data->map, "Error\nMap not close 3.\n");
-	if (map[i] && map[i][j - 1] && j != 0)
+	if (j != 0 && map[i] && map[i][j - 1])
 		if (map[i][j - 1] != '1' && ft_is_whitespace(map[i][j - 1]) != 1)
 			ft_msg_free(data->map, "Error\nMap not close 4.\n");
 }
@@ -105,9 +105,6 @@ int	ft_check_line(char **map, int i, int j, t_data *data)
 
 void	ft_check_endline(char **map, t_data *data)
 {
-	int k=0;
-	while(map[k])
-		printf("%s\n",map[k++]);
 	if ((size_t)data->newline != ft_strlen2d(map) - 1)
 		ft_msg_free(data->map, "Error\nCarefull a empty line was detected.\n");
 }

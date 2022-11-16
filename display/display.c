@@ -21,6 +21,8 @@ void	fov_3d(t_data *data)
 
 	x = 0;
 	data->img = mlx_new_image(data->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT);
+	if (!data->img)
+		ft_msg_free(data->map, "Error\nPB WINDOWS\n");
 	data->addr = mlx_get_data_addr(data->img,
 			&data->bits_per_pixel, &data->line_length, &data->endian);
 	data->tmp_angle = data->player_angle + (FOV / 2);
@@ -35,7 +37,7 @@ void	fov_3d(t_data *data)
 		find_distance(data);
 		remove_distorsion(data);
 		draw_3D(data, x);
-		data->tmp_angle = data->tmp_angle - 0.03125;
+		data->tmp_angle = data->tmp_angle - 0.046875;
 		x++;
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img, 0, 0);
@@ -44,9 +46,11 @@ void	fov_3d(t_data *data)
 void	window(t_data *data)
 {
 	data->mlx_ptr = mlx_init();
+	if (!data->mlx_ptr)
+		free_map_file(data, data->map, "Error\nPB WINDOWS\n");
 	data->win_ptr = mlx_new_window(data->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT, "CUB3D");
 	if (!data->win_ptr)
-		ft_msg_free(data->map, "Error\nPB WINDOWS\n");
+		free_map_file(data, data->map, "Error\nPB WINDOWS\n");
 }
 
 void	start_display(t_data *data)

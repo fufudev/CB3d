@@ -50,7 +50,7 @@ void	ft_check_file(t_parsing *parse, char **argv)
 	{
 		parse->fd = open(argv[1], O_RDONLY);
 		if (parse->fd < 0)
-			ft_msg("Error\nFile incorrect");
+			ft_msg("Error\nFile incorrect\n");
 	}
 }
 

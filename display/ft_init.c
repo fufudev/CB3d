@@ -40,15 +40,11 @@ void	init_coordinates_vertical(t_data *data, double *xa, double *ax)
 	}
 }
 
-void	init_value(int *i, int *good_value, int *indic)
+void	init_value(t_data *data, int *i, int *good_value, int *indic)
 {
 	*i = 0;
 	*indic = 0;
 	*good_value = 0;
-}
-
-void	init_id(t_data *data)
-{
 	data->no = 0;
 	data->so = 0;
 	data->we = 0;
@@ -59,7 +55,12 @@ void	init_id(t_data *data)
 	data->pos_y = 0;
 	data->player_y = 0;
 	data->player_x = 0;
-	data->speed = 10;
+	data->slice_height = 0;
+	data->speed = 20;
+	data->f_no = NULL;
+	data->f_so = NULL;
+	data->f_we = NULL;
+	data->f_ea = NULL;
 }
 
 void	init_img_addr(t_data *data)
@@ -68,9 +69,17 @@ void	init_img_addr(t_data *data)
 	int	height;
 
 	data->no_img = mlx_xpm_file_to_image(data->mlx_ptr, data->f_no, &width, &height);
+	if (!data->no_img)
+		free_map_file(data, data->map, "Error\nProbleme xpm file to img\n");
 	data->so_img = mlx_xpm_file_to_image(data->mlx_ptr, data->f_so, &width, &height);
+	if (!data->no_img)
+		free_map_file(data, data->map, "Error\nProbleme xpm file to img\n");
 	data->we_img = mlx_xpm_file_to_image(data->mlx_ptr, data->f_we, &width, &height);
+	if (!data->no_img)
+		free_map_file(data, data->map, "Error\nProbleme xpm file to img\n");
 	data->ea_img = mlx_xpm_file_to_image(data->mlx_ptr, data->f_ea, &width, &height);
+	if (!data->no_img)
+		free_map_file(data, data->map, "Error\nProbleme xpm file to img\n");
 	free_img_filename(data);
 	data->a_no = (int *)mlx_get_data_addr(data->no_img, &data->bits_per_pixel, &data->line_length, &data->endian);
 	data->a_so = (int *)mlx_get_data_addr(data->so_img, &data->bits_per_pixel, &data->line_length, &data->endian);

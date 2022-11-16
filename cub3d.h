@@ -19,8 +19,8 @@
 # define WEST 180
 # define NORTH 90
 # define SOUTH 270
-# define W 13
-# define A 0
+# define W 6
+# define A 12
 # define S 1
 # define D 2
 # define LEFT 123
@@ -146,7 +146,7 @@ void	ft_check_first_last(int i, char **map, t_data *data);
 int		ft_check_middle(int i, int j, char **map, t_data *data);
 void	ft_swoosh(int *swoosh, char c, int *i);
 int		ft_wall_exist(char *s);
-void	init_value(int *i, int *good_value, int *indic);
+void	init_value(t_data *data, int *i, int *good_value, int *indic);
 void	draw_player(t_data *data, int py, int px, int color);
 void	draw_rect(t_data *data, int x, int y, int color);
 int		is_player(char c);
@@ -206,5 +206,6 @@ int		check_left_distance(t_data *data, double x_tmp, double y_tmp);
 int		check_right_distance(t_data *data, double x_tmp, double y_tmp);
 int		check_up_distance(t_data *data, double x_tmp, double y_tmp);
 int		check_back_distance(t_data *data, double x_tmp, double y_tmp);
+void	free_map_file(t_data *data, char **map, char *msg);
 
 #endif

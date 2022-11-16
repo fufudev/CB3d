@@ -60,7 +60,7 @@ int	txt(char *str, int text, t_data *data)
 
 	filename = get_txt_name(str);
 	if (open(filename, O_RDONLY) == -1)
-		ft_msg_free(data->map, "Error\nTexture not valid\n");
+		free_map_file(data, data->map, "Error\nTexture not valid\n");
 	if (text == 0)
 		data->f_no = filename;
 	if (text == 1)
@@ -96,7 +96,7 @@ int	ft_id_is_true(char *str, t_data *d)
 	}
 	if (ft_id_is_true_part_2(str, d) == 1)
 		return (1);
-	ft_msg_free(d->map, "Error\nCheck the ID in the map.\n");
+	free_map_file(d, d->map, "Error\nCheck the ID in the map.\n");
 	return (0);
 }
 
@@ -106,15 +106,14 @@ void	ft_check_id(t_data *data)
 	int	good_value;
 	int	indic;
 
-	init_value(&i, &good_value, &indic);
-	init_id(data);
+	init_value(data, &i, &good_value, &indic);
 	while (data->map[i])
 	{
 		indic = ft_parse_id(data->map[i++], data);
 		if (indic == 1)
 		{
 			if (good_value != 6)
-				ft_msg_free(data->map, "Error\nMap incorrect.\n");
+				free_map_file(data, data->map, "Error\nMap incorrect.\n");
 			else
 			{
 				ft_check_map(&(data->map[i - 1]), data);
@@ -125,5 +124,5 @@ void	ft_check_id(t_data *data)
 			good_value++;
 	}
 	if (data->indic == 0)
-		ft_msg_free(data->map, "Error\nCan't found a player.\n");
+		free_map_file(data, data->map, "Error\nCan't found a player.\n");
 }

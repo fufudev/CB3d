@@ -27,7 +27,7 @@ int	check_left_distance(t_data *data, double x_tmp, double y_tmp)
 	data->player_x += x_tmp;
 	data->player_y -= y_tmp;
 	data->tmp_angle -= 60;
-	if (data->distance < 60)
+	if (data->distance < 20)
 		return (1);
 	else
 		return (0);
@@ -48,7 +48,7 @@ int	check_right_distance(t_data *data, double x_tmp, double y_tmp)
 	data->player_x -= x_tmp;
 	data->player_y += y_tmp;
 	data->tmp_angle += 60;
-	if (data->distance < 60)
+	if (data->distance < 20)
 		return (1);
 	else
 		return (0);
@@ -63,7 +63,7 @@ int	check_up_distance(t_data *data, double x_tmp, double y_tmp)
 	find_distance(data);
 	data->player_x -= x_tmp;
 	data->player_y += y_tmp;
-	if (data->distance < 100)
+	if (data->distance < 20)
 		return (1);
 	else
 		return (0);
@@ -84,7 +84,7 @@ int	check_back_distance(t_data *data, double x_tmp, double y_tmp)
 	data->player_x += x_tmp;
 	data->player_y -= y_tmp;
 	data->tmp_angle -= 180;
-	if (data->distance < 50)
+	if (data->distance < 20)
 		return (1);
 	else
 		return (0);

@@ -49,12 +49,31 @@ void	free_img_filename(t_data *data)
 	free(data->f_ea);
 	free(data->f_we);
 	free(data->f_so);
+	data->f_no = NULL;
+	data->f_so = NULL;
+	data->f_we = NULL;
+	data->f_ea = NULL;
 }
 
 void	ft_msg_free(char **map, char *msg)
 {
 	ft_freesplit(map);
 	ft_putstr_fd(msg, 2);
+	exit(EXIT_FAILURE);
+}
+
+void	free_map_file(t_data *data, char **map, char *msg)
+{
+	ft_freesplit(map);
+	ft_putstr_fd(msg, 2);
+	if (data->f_ea)
+		free(data->f_ea);
+	if (data->f_we)
+		free(data->f_we);
+	if (data->f_so)
+		free(data->f_so);
+	if (data->f_no)
+		free(data->f_no);
 	exit(EXIT_FAILURE);
 }
 
