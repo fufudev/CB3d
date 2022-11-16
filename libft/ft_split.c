@@ -12,100 +12,101 @@
 
 #include "libft.h"
 
-static int	is_sep(char s, char c)
+static char	**alloc_words(char const *s, char c, char ***tab)
 {
-	if (s == c)
-		return (1);
-	else
-		return (0);
-}
+	size_t	idx;
+	size_t	nb_words;
 
-static size_t	word(char const *s, char c)
-{
-	size_t	i;
-	size_t	j;
-	size_t	w;
+	nb_words = 0;
+	idx = 0;
 
-	w = 0;
-	i = 0;
-	j = 0;
-	while (s[i] && s[j])
+	while(s[idx])
 	{
-		i = j;
-		while (is_sep(s[i], c) && s[i])
-			i++;
-		j = i;
-		while ((!(is_sep(s[j], c))) && s[j])
-			j++;
-		if (j > i)
-			w++;
+		while(s[idx] && s[idx] == c)
+			idx++;
+		if(s[idx])
+			nb_words++;
+		while(s[idx] && s[idx] != c)
+			idx++;
 	}
-	return (w);
+	*tab = malloc(sizeof(char *) * (nb_words + 1));
+	return(*tab);
 }
 
-static int	alloc_char(size_t len, size_t index, char **tab)
+char	**free_split_error(char ***tab)
 {
-	tab[index] = malloc(sizeof(char) * len + 1);
-	if (!tab[index])
-		return (0);
-	return (1);
-}
+	int	freedx;
 
-static char	**walloc(char const *s, char c)
-{
-	char	**tab;
-	size_t	i;
-	size_t	j;
-	size_t	w;
-
-	w = 0;
-	i = 0;
-	j = 0;
-	tab = malloc(sizeof(char *) * word(s, c) + 1);
-	if (!tab)
-		return (NULL);
-	while (s[i] && s[j])
+	if(*tab)
 	{
-		i = j;
-		while (is_sep(s[i], c) && s[i])
-			i++;
-		j = i;
-		while ((!(is_sep(s[j], c))) && s[j])
-			j++;
-		if (j > i)
-			if (!(alloc_char(j - i, w, tab)))
-				return (NULL);
-		w++;
+		freedx = 0;
+		while((*tab)[freedx])
+			free((*tab)[freedx++]);
+		free(*tab);
+		*tab = (char **)NULL;
 	}
-	return (tab);
+	return (*tab);
+}
+
+char	**alloc_each_word(char const *s, char c, char ***tab)
+{
+	int widx;
+	int wlen;
+	int sidx;
+
+	sidx = 0;
+	widx = 0;
+	while(s[sidx])
+	{
+		while(s[sidx] && s[sidx] == c)
+			sidx++;
+		wlen = 0;
+		while(s[sidx] && s[sidx] != c)
+		{
+			sidx++;
+			wlen++;
+		}
+		if (wlen)
+		{
+			(*tab)[widx] = (char*)malloc(sizeof(char) * (wlen + 1));
+			if (!(*tab)[widx++])
+				return (free_split_error(tab));
+		}
+	}
+	return (*tab);
+}
+
+void	copy_words(char const *s, char c, char **tab)
+{
+		int widx;
+	int wlen;
+	int sidx;
+
+	sidx = 0;
+	widx = 0;
+	while(s[sidx])
+	{
+		while(s[sidx] && s[sidx] == c)
+			sidx++;
+		wlen = 0;
+		while(s[sidx] && s[sidx] != c)
+			tab[widx][wlen++] = s[sidx++];
+		tab[widx++][wlen] = '\0';
+	}
+	tab[widx] = (char *)NULL;
 }
 
 char	**ft_split(char const *s, char c)
 {
 	char	**tab;
-	size_t	w;
-	size_t	i;
-	size_t	j;
 
 	if (!s)
 		return (NULL);
-	i = 0;
-	j = 0;
-	w = 0;
-	tab = walloc(s, c);
-	if (!tab)
+	if (!alloc_words(s, c, &tab))
 		return (NULL);
-	while (j < word(s, c))
-	{
-		w = 0;
-		while (is_sep(s[i], c) && s[i])
-			i++;
-		while ((!(is_sep(s[i], c))) && s[i])
-			tab[j][w++] = s[i++];
-		tab[j][w] = 0;
-		j++;
-	}
-	tab[j] = NULL;
+	if (!alloc_each_word(s, c, &tab))
+		return (NULL);
+	copy_words(s, c, tab);
 	return (tab);
 }
 /*

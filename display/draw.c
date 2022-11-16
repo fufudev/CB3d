@@ -43,37 +43,37 @@ void	get_color(t_data *data, int x, int y, int orientation)
 	}
 }
 
-void	draw_texture(t_data *data, int x, int p)
+void	draw_texture(t_data *data, int x, int y)
 {
 	if (data->orientation == 0)
 		data->txt_x = fmod(data->pos_x / 64.0, 1.0) * 64.0;
 	if (data->orientation == 1)
 		data->txt_x = fmod(data->pos_y / 64.0, 1.0) * 64.0;
-	data->txt_y = ((1.0 - (double)(data->dist_before_wall - p))
+	data->txt_y = ((double)(y - data->dist_before_wall)
 		/ data->slice_height) * 64.0;
 	data->index = data->txt_x + (data->txt_y * 64.0);
 	//printf(" txt_x : %d txt_y : %d\n", data->txt_x, data->txt_y);
-	get_color(data, x, p, data->orientation);
+	get_color(data, x, y, data->orientation);
 }
 
 void	draw_3D(t_data *data, int x)
 {
 	int		y;
-	int		w;
+//	int		w;
 
 	data->center = WINDOW_HEIGHT / 2;
 	data->dist_plane = fabs((WINDOW_WIDTH / 2) / tan(degree_to_radian(FOV / 2)));
 	data->slice_height = ceil((64 / data->distance) * data->dist_plane);
-	if (data->slice_height > WINDOW_HEIGHT)
-		data->slice_height = WINDOW_HEIGHT - 1;
-	data->dist_before_wall = data->center - (data->slice_height / 2);
-	y = -1;
-	w = -1;
+	data->dist_before_wall = ceil(data->center - (data->slice_height / 2));
+	y = 0;
 	//printf("\n------------\n");
-	while (++y < floor(data->dist_before_wall))
-		my_mlx_pixel_put(data, x, y, rgb_to_int(data->ceiling));
-	while (++w <= data->slice_height && w + y < WINDOW_HEIGHT)
-		draw_texture(data, x, w + y);
-	while (++w + y < WINDOW_HEIGHT)
-		my_mlx_pixel_put(data, x, w + y, rgb_to_int(data->floor));
+	while (y < data->center)
+		my_mlx_pixel_put(data, x, y++, rgb_to_int(data->ceiling));
+	while (y < WINDOW_HEIGHT)
+		my_mlx_pixel_put(data, x, y++, rgb_to_int(data->floor));
+	y = data->dist_before_wall;
+	while (y < (data->dist_before_wall + data->slice_height) && y < WINDOW_HEIGHT)
+		draw_texture(data, x, y++);
+	while (y < WINDOW_HEIGHT)
+		my_mlx_pixel_put(data, x, y++, rgb_to_int(data->floor));
 }

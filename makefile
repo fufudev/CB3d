@@ -38,7 +38,7 @@ $(L_FT)/libft.a:
 	make -C $(L_FT)
 
 %.o: %.c
-	$(CC) -g -o  $@ -c $< -I$(I_DIR)
+	$(CC) $(CFLAGS) -g -o  $@ -c $< -I$(I_DIR)
 
 clean:
 	make clean -C $(L_FT)
