@@ -22,6 +22,7 @@ SRC =	parsing/parsing.c	    	\
 		display/save.c				\
 		display/moov.c				\
 		display/moov_2.c			\
+		display/moov_3.c			\
 		display/display.c			\
 		display/draw.c				\
 		display/distance.c			\
@@ -34,7 +35,7 @@ $(NAME): $(L_FT)/libft.a $(OBJ)
 		$(CC) $(LDFLAG) $(CFLAGS) $(OBJ) -I$(I_DIR) -L$(L_FT) libft/libft.a $(MLX)/libmlx.a -o $(NAME)
 
 $(L_FT)/libft.a:
-	make -C $(L_FT) 
+	make -C $(L_FT)
 
 %.o: %.c
 	$(CC) -g -o  $@ -c $< -I$(I_DIR)

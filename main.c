@@ -6,7 +6,7 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 10:49:24 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/14 12:21:53 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/16 11:32:40 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	is_player(char c)
 {
-	if (c == 'N'|| c == 'S' || c == 'E' || c == 'W')
+	if (c == 'N' || c == 'S' || c == 'E' || c == 'W')
 		return (1);
 	return (0);
 }
@@ -48,9 +48,9 @@ int	main(int argc, char **argv)
 {
 	t_data		data;
 	t_parsing	parse;
-	
+
 	if (argc > 0)
-	{		
+	{
 		start_parsing(&data, &parse, argv);
 		start_display(&data);
 	}

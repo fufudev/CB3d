@@ -19,16 +19,16 @@
 # define WEST 180
 # define NORTH 90
 # define SOUTH 270
-# define W 6
-# define A 12
+# define W 13
+# define A 0
 # define S 1
 # define D 2
 # define LEFT 123
 # define RIGHT 124
 # define LEFT_L 65361
 # define RIGHT_L 65363
-# define WINDOW_WIDTH 150
-# define WINDOW_HEIGHT 150
+# define WINDOW_WIDTH 1280
+# define WINDOW_HEIGHT 720
 
 typedef struct s_point
 {
@@ -188,7 +188,6 @@ int		ft_biglen(char **s);
 void	init_coordinates_vertical(t_data *data, double *xa, double *ax);
 void	init_coordinates_horizontal(t_data *data, double *ya, double *ay);
 double	degree_to_radian(double r);
-void	draw_3D(t_data *data, int x);
 void	get_color(t_data *data, int x, int y, int orientation);
 int		rgb_to_int(int *tab);
 void	fov_3d(t_data *data);
@@ -203,6 +202,9 @@ void	ft_save_f(char *s, t_data *data);
 int		ft_save(char *s, t_data *data, int indic, int array);
 void	init_img_addr(t_data *data);
 void	free_img_filename(t_data *data);
-
+int		check_left_distance(t_data *data, double x_tmp, double y_tmp);
+int		check_right_distance(t_data *data, double x_tmp, double y_tmp);
+int		check_up_distance(t_data *data, double x_tmp, double y_tmp);
+int		check_back_distance(t_data *data, double x_tmp, double y_tmp);
 
 #endif

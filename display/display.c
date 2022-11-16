@@ -21,7 +21,7 @@ void	fov_3d(t_data *data)
 
 	x = 0;
 	data->img = mlx_new_image(data->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT);
-	data->addr = mlx_get_data_addr(data->img, 
+	data->addr = mlx_get_data_addr(data->img,
 			&data->bits_per_pixel, &data->line_length, &data->endian);
 	data->tmp_angle = data->player_angle + (FOV / 2);
 	while (x < WINDOW_WIDTH)
@@ -35,7 +35,7 @@ void	fov_3d(t_data *data)
 		find_distance(data);
 		remove_distorsion(data);
 		draw_3D(data, x);
-		data->tmp_angle = data->tmp_angle - 0.046875;
+		data->tmp_angle = data->tmp_angle - 0.03125;
 		x++;
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img, 0, 0);

@@ -33,8 +33,8 @@ void	find_vertical_intersection(t_data *d)
 	d->vt.tx = d->vt.ax ;
 	if (check_vt_broke(d) == 1)
 		return ;
-	while (d->s_map[(int)floor(d->vt.ty / 64.0)][(int)floor(d->vt.tx / 64.0)] != '1' 
-			&& d->s_map[(int)floor(d->vt.ty / 64.0)][(int)floor(d->vt.tx / 64.0)] != ' ' 
+	while (d->s_map[(int)floor(d->vt.ty / 64.0)][(int)floor(d->vt.tx / 64.0)] != '1'
+			&& d->s_map[(int)floor(d->vt.ty / 64.0)][(int)floor(d->vt.tx / 64.0)] != ' '
 				&& d->s_map[(int)floor(d->vt.ty / 64.0)][(int)floor(d->vt.tx / 64.0)] != '\0')
 	{
 		d->vt.ay = d->player_y + (d->player_x - d->vt.ax)
@@ -50,9 +50,9 @@ void	find_vertical_intersection(t_data *d)
 
 void	get_sqrt(t_data *data, double *dist_hz, double *dist_vt)
 {
-	*dist_hz = sqrt(pow(data->player_x - data->hz.tx, 2) 
+	*dist_hz = sqrt(pow(data->player_x - data->hz.tx, 2)
 				+ pow(data->player_y - data->hz.ty, 2));
-	*dist_vt = sqrt(pow(data->player_x - data->vt.tx, 2) 
+	*dist_vt = sqrt(pow(data->player_x - data->vt.tx, 2)
 				+ pow(data->player_y - data->vt.ty, 2));
 }
 

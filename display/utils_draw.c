@@ -26,16 +26,16 @@ double	degree_to_radian(double r)
 
 int	ft_biglen(char **s)
 {
-	int i;
-	int j;
-	int len;
+	int	i;
+	int	j;
+	int	len;
 
 	i = 0;
 	len = 0;
 	while (s[i])
 	{
 		j = 0;
-		while(s[i][j])
+		while (s[i][j])
 			j++;
 		if (j > len)
 			len = j;
@@ -48,12 +48,12 @@ void	remove_distorsion(t_data *data)
 {
 	if (data->tmp_angle >= data->player_angle)
 	{
-		data->distance = data->distance 
+		data->distance = data->distance
 			* cos(degree_to_radian(data->tmp_angle - data->player_angle));
 	}
 	else
 	{
-		data->distance = data->distance 
+		data->distance = data->distance
 			* cos(degree_to_radian(data->player_angle - data->tmp_angle));
 	}
 }
