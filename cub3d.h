@@ -30,14 +30,6 @@
 # define WINDOW_WIDTH 1280
 # define WINDOW_HEIGHT 720
 
-typedef struct s_img {
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-}				t_img;
-
 typedef struct s_point
 {
 	double	xa;
@@ -70,6 +62,10 @@ typedef struct s_data
 	double	tmp_angle;
 	double	distance;
 	double	line_height;
+	double	slice_height;
+	double	center;
+	double	dist_plane;
+	double	dist_before_wall;
 	int		orientation;
 	int		speed;
 	int		offset;
@@ -107,6 +103,7 @@ typedef struct s_parsing
 	int	indic;
 }	t_parsing;
 
+int		txt(char *str, int text, t_data *data);
 void	find_and_draw(t_data *data);
 void	window(t_data *data);
 void	draw_rayon(t_data *data, double wall_x, double wall_y);
@@ -120,7 +117,7 @@ void	ft_name(char *argv);
 char	*ft_strjoin_free(char *s1, char *s2);
 void	ft_read_map(t_data *data, t_parsing *parse);
 void	start_parsing(t_data *data, t_parsing *parse, char **argv);
-void	ft_check_id(t_data *data, t_parsing *parse);
+void	ft_check_id(t_data *data);
 int		ft_parse_id(char *map, t_data *data);
 int		ft_is_whitespace(char c);
 int		ft_is_c_or_f(char *str, t_data *data);
@@ -134,7 +131,7 @@ int		ft_path(char *str, t_data *data);
 void	ft_check_rgb(char *str, t_data *data);
 int		parse_digit(char *str, t_data *data);
 void	ft_check_value(int tmp_atoi, t_data *data);
-void	ft_check_map(char **map, t_data *data, t_parsing *parse);
+void	ft_check_map(char **map, t_data *data);
 int		ft_check_wall(char *map, int i, t_data *data);
 int		ft_check_line(char **map, int i, int j, t_data *data);
 void	ft_check_first_line(char *map, t_data *data);
@@ -144,6 +141,7 @@ void	ft_check_zero(char **map, int i, int j, t_data *data);
 void	ft_check_endline(char **map, t_data *data);
 void	ft_freesplit(char **str);
 size_t	ft_strlen2d(char **s);
+int		ft_strlen_int(const char *s);
 void	ft_check_first_last(int i, char **map, t_data *data);
 int		ft_check_middle(int i, int j, char **map, t_data *data);
 void	ft_swoosh(int *swoosh, char c, int *i);
@@ -166,5 +164,45 @@ void	draw_3D(t_data *data, int x);
 void	draw_column(t_data *data, int x);
 void	find_and_draw(t_data *data);
 void	find_distance(t_data *data);
+void	window(t_data *data);
+void	start_display(t_data *data);
+void	draw_column(t_data *data, int x);
+void	event(t_data *data);
+void	find_and_draw(t_data *data);
+int		key_hook(int keycode, t_data *data);
+void	step_side(int keycode, t_data *data);
+void	right_side(t_data *data, double *x_tmp, double *y_tmp);
+void	left_side(t_data *data, double *x_tmp, double *y_tmp);
+void	up_back(int keycode, t_data *data);
+void	back(t_data *data, double *x_tmp, double *y_tmp);
+void	up(t_data *data, double *x_tmp, double *y_tmp);
+void	left_right(int keycode, t_data *data);
+void	find_distance(t_data *data);
+void	save_distance(t_data *data, double x, double y, int orientation);
+void	draw_rayon(t_data *data, double wall_x, double wall_y);
+void	find_vertical_intersection(t_data *data);
+void	find_horizontal_intersection(t_data *data);
+int		check_vt_broke(t_data *data);
+int		check_hz_broke(t_data *data);
+int		ft_biglen(char **s);
+void	init_coordinates_vertical(t_data *data, double *xa, double *ax);
+void	init_coordinates_horizontal(t_data *data, double *ya, double *ay);
+double	degree_to_radian(double r);
+void	draw_3D(t_data *data, int x);
+void	get_color(t_data *data, int x, int y, int orientation);
+int		rgb_to_int(int *tab);
+void	fov_3d(t_data *data);
+void	remove_distorsion(t_data *data);
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+int		ft_check_middle(int i, int j, char **map, t_data *data);
+void	ft_check_first_last(int i, char **map, t_data *data);
+int		is_player(char c);
+void	ft_save_data(t_data *data);
+void	ft_save_c(char *s, t_data *data);
+void	ft_save_f(char *s, t_data *data);
+int		ft_save(char *s, t_data *data, int indic, int array);
+void	init_img_addr(t_data *data);
+void	free_img_filename(t_data *data);
+
 
 #endif

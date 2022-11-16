@@ -105,7 +105,7 @@ char	**ft_split(char const *s, char c)
 		tab[j][w] = 0;
 		j++;
 	}
-	tab[j] = 0;
+	tab[j] = NULL;
 	return (tab);
 }
 /*

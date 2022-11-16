@@ -12,35 +12,6 @@
 
 #include "../cub3d.h"
 
-void	ft_check_rgb(char *str, t_data *data)
-{
-	int	i;
-	int	indic;
-	int	swoosh;
-
-	i = -1;
-	indic = 0;
-	swoosh = 0;
-	while (str[++i])
-	{
-		ft_swoosh(&swoosh, str[i], &i);
-		if (ft_is_whitespace(str[i]) == 1)
-			continue ;
-		if (indic < 3 && ft_isdigit(str[i]) == 1)
-		{
-			if (swoosh != 0)
-				ft_msg_free(data->map, "Error\nPb 1 RGB\n.");
-			i = i + parse_digit(&str[i], data);
-			indic++;
-			swoosh = 1;
-		}
-		else
-			ft_msg_free(data->map, "Error\nProblem 2 RGB\n");
-	}
-	if (indic != 3)
-		ft_msg_free(data->map, "Error\nRGB not good\n");
-}
-
 int	ft_id_is_true_part_2(char *str, t_data *data)
 {
 	if (ft_strncmp(str, "F ", 2) == 0 && data->f == 0)
@@ -58,7 +29,7 @@ int	ft_id_is_true_part_2(char *str, t_data *data)
 	return (0);
 }
 
-char	*get_txt_name(char *str, t_data *data)
+char	*get_txt_name(char *str)
 {
 	int	i;
 	int begin;
@@ -85,9 +56,9 @@ char	*get_txt_name(char *str, t_data *data)
 
 int	txt(char *str, int text, t_data *data)
 {
-	char *filename;
+	char	*filename;
 
-	filename = get_txt_name(str, data);
+	filename = get_txt_name(str);
 	if (open(filename, O_RDONLY) == -1)
 		ft_msg_free(data->map, "Error\nTexture not valid\n");
 	if (text == 0)
@@ -129,7 +100,7 @@ int	ft_id_is_true(char *str, t_data *d)
 	return (0);
 }
 
-void	ft_check_id(t_data *data, t_parsing *parse)
+void	ft_check_id(t_data *data)
 {
 	int	i;
 	int	good_value;
@@ -146,7 +117,7 @@ void	ft_check_id(t_data *data, t_parsing *parse)
 				ft_msg_free(data->map, "Error\nMap incorrect.\n");
 			else
 			{
-				ft_check_map(&(data->map[i - 1]), data, parse);
+				ft_check_map(&(data->map[i - 1]), data);
 				break ;
 			}
 		}

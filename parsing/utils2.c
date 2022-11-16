@@ -37,16 +37,18 @@ size_t	ft_strlen2d(char **s)
 	return (i);
 }
 
-/*void	escape(t_minilibx *mnlx)
+void	escape(t_data *data)
 {
+	ft_freesplit(data->map);
 	int	mlx_destroy_window(void *mlx_ptr, void *win_ptr);
 	exit(1);
-}*/
+}
 
 void	quit(t_data *data)
 {
+	ft_freesplit(data->map);
 	int	mlx_destroy_window(void *mlx_ptr, void *win_ptr);
-	ft_freesplit(data->s_map);
+	//ft_freesplit(data->s_map);
 	exit(1);
 }
 

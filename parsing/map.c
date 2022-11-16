@@ -67,7 +67,7 @@ void	ft_read_map(t_data *data, t_parsing *parse)
 	close(parse->fd);
 }
 
-void	ft_check_map(char **map, t_data *data, t_parsing *parse)
+void	ft_check_map(char **map, t_data *data)
 {
 	int	i;
 	int	j;
@@ -86,7 +86,7 @@ void	ft_check_map(char **map, t_data *data, t_parsing *parse)
 			ft_check_first_last(i, map, data);
 			if (ft_check_middle(i, j, map, data) == 1)
 				continue ;
-			if (i != 0 && i != ft_strlen2d(map) - 1)
+			if (i != 0 && i != (int)ft_strlen2d(map) - 1)
 				if (ft_check_line(map, i, j, data) == 1)
 					ft_msg_free(data->map, "Error\nIn the map you have a wrong alpha.\n");
 			if (wall == 0 && ft_check_wall(map[i], j, data) == 0)

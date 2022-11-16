@@ -17,7 +17,14 @@ SRC =	parsing/parsing.c	    	\
 		parsing/ft_id_check.c		\
 		parsing/ft_id_check_2.c		\
 		parsing/ft_path_check.c		\
-		ft_init.c					\
+		display/ft_init.c			\
+		display/utils_draw.c		\
+		display/save.c				\
+		display/moov.c				\
+		display/moov_2.c			\
+		display/display.c			\
+		display/draw.c				\
+		display/distance.c			\
 
 OBJ = $(SRC:%.c=%.o)
 
@@ -30,7 +37,7 @@ $(L_FT)/libft.a:
 	make -C $(L_FT) 
 
 %.o: %.c
-	$(CC) -g -o  $@ -c $< -I$(I_DIR)
+	$(CC) $(CFLAGS) -g -o  $@ -c $< -I$(I_DIR)
 
 clean:
 	make clean -C $(L_FT)

@@ -43,9 +43,12 @@ int	ft_is_whitespace(char c)
 	return (0);
 }
 
-void	ft_putstr_fd(char *msg, int fd)
+void	free_img_filename(t_data *data)
 {
-	write(fd, msg, ft_strlen(msg));
+	free(data->f_no);
+	free(data->f_ea);
+	free(data->f_we);
+	free(data->f_so);
 }
 
 void	ft_msg_free(char **map, char *msg)

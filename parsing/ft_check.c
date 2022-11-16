@@ -14,14 +14,14 @@
 
 void	ft_check_around(char **map, int i, int j, t_data *data)
 {
-	if (map[i + 1] && ft_strlen(map[i + 1])
-		>= ft_strlen(map[i]) && i != ft_strlen2d(map))
+	if (map[i + 1] && ft_strlen_int(map[i + 1])
+		>= ft_strlen_int(map[i]) && (size_t)i != ft_strlen2d(map))
 		if (map[i + 1][j] != '1' && ft_is_whitespace(map[i + 1][j]) != 1)
 			ft_msg_free(data->map, "Error\nMap not close 1.\n");
-	if (map[i - 1] && ft_strlen(map[i - 1]) >= ft_strlen(map[i]) && i != 0)
+	if (map[i - 1] && ft_strlen_int(map[i - 1]) >= ft_strlen_int(map[i]) && i != 0)
 		if (map[i - 1][j] != '1' && ft_is_whitespace(map[i - 1][j]) != 1)
 			ft_msg_free(data->map, "Error\nMap not close 2.\n");
-	if (map[i] && map[i][j + 1] && j != ft_strlen(map[i]))
+	if (map[i] && map[i][j + 1] && j != (int)ft_strlen_int(map[i]))
 		if (map[i][j + 1] != '1' && ft_is_whitespace(map[i][j + 1]) != 1)
 			ft_msg_free(data->map, "Error\nMap not close 3.\n");
 	if (map[i] && map[i][j - 1] && j != 0)
@@ -38,7 +38,7 @@ void	ft_check_zero(char **map, int i, int j, t_data *data)
 		if ((!map[i - 1]) || (!map[i - 1][j])
 			|| ft_is_whitespace(map[i - 1][j]) == 1)
 			ft_msg_free(data->map, "Error\nMap not close 6.\n");
-	if (j != ft_strlen(map[i]))
+	if (j != ft_strlen_int(map[i]))
 		if ((!map[i]) || (!map[i][j + 1])
 			|| ft_is_whitespace(map[i][j + 1]) == 1)
 			ft_msg_free(data->map, "Error\nMap not close 7.\n");
@@ -62,7 +62,7 @@ void	ft_check_first_line(char *map, t_data *data)
 		else
 			ft_msg_free(data->map, "Error\nYou have space after the wall and nothing behind. Delete it !\n");
 	}
-	i = ft_strlen(map) - 1;
+	i = ft_strlen_int(map) - 1;
 	while (i > 0)
 	{
 		if (ft_is_whitespace(map[i]) == 1)
@@ -105,6 +105,9 @@ int	ft_check_line(char **map, int i, int j, t_data *data)
 
 void	ft_check_endline(char **map, t_data *data)
 {
-	if (data->newline != ft_strlen2d(map) - 1)
+	int k=0;
+	while(map[k])
+		printf("%s\n",map[k++]);
+	if ((size_t)data->newline != ft_strlen2d(map) - 1)
 		ft_msg_free(data->map, "Error\nCarefull a empty line was detected.\n");
 }
