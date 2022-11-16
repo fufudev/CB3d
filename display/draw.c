@@ -52,6 +52,7 @@ void	draw_texture(t_data *data, int x, int p)
 	data->txt_y = ((1.0 - (double)(data->dist_before_wall - p))
 		/ data->slice_height) * 64.0;
 	data->index = data->txt_x + (data->txt_y * 64.0);
+	printf(" txt_x : %d txt_y : %d\n", data->txt_x, data->txt_y);
 	get_color(data, x, p, data->orientation);
 }
 
@@ -68,6 +69,7 @@ void	draw_3D(t_data *data, int x)
 	data->dist_before_wall = data->center - (data->slice_height / 2);
 	y = -1;
 	w = -1;
+	printf("\n------------\n");
 	while (++y < floor(data->dist_before_wall))
 		my_mlx_pixel_put(data, x, y, rgb_to_int(data->ceiling));
 	while (++w <= data->slice_height && w + y < WINDOW_HEIGHT)
