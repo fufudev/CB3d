@@ -12,6 +12,7 @@ SRC =	parsing/parsing.c	    	\
 		main.c			        	\
 		parsing/utils.c				\
 		parsing/utils2.c			\
+		parsing/utils3.c			\
 		parsing/ft_check.c			\
 		parsing/map.c				\
 		parsing/ft_id_check.c		\

@@ -1,4 +1,16 @@
-# ifndef CUB3D_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/11/17 21:53:19 by anggonza          #+#    #+#             */
+/*   Updated: 2022/11/17 21:56:41 by anggonza         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef CUB3D_H
 # define CUB3D_H
 
 # include <unistd.h>
@@ -9,7 +21,6 @@
 # include "mlx/mlx.h"
 # include "mlx/mlx_opengl.h"
 # include <math.h>
-//# include "X11/X.h"
 
 # define ESC 0x35
 # define FOV 60
@@ -83,15 +94,15 @@ typedef struct s_data
 	size_t	len;
 	t_point	vt;
 	t_point	hz;
-	char	*f_no;//FILE
+	char	*f_no;
 	char	*f_so;
 	char	*f_we;
 	char	*f_ea;
-	int		*a_no;//ADRESS
+	int		*a_no;
 	int		*a_so;
 	int		*a_we;
 	int		*a_ea;
-	void	*no_img;//IMG
+	void	*no_img;
 	void	*so_img;
 	void	*we_img;
 	void	*ea_img;
@@ -207,5 +218,5 @@ int		check_right_distance(t_data *data, double x_tmp, double y_tmp);
 int		check_up_distance(t_data *data, double x_tmp, double y_tmp);
 int		check_back_distance(t_data *data, double x_tmp, double y_tmp);
 void	free_map_file(t_data *data, char **map, char *msg);
-
+void	init_positionn(t_data *data, int i, int j);
 #endif

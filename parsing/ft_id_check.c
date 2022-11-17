@@ -6,7 +6,7 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 11:16:00 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/14 12:21:35 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/17 22:00:46 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ int	ft_id_is_true_part_2(char *str, t_data *data)
 
 char	*get_txt_name(char *str)
 {
-	int	i;
-	int begin;
-	char *filename;
+	int		i;
+	int		begin;
+	char	*filename;
 
 	i = 0;
 	while (str[i++])
