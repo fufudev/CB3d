@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   save.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ffiliz <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/11/17 21:57:48 by ffiliz            #+#    #+#             */
+/*   Updated: 2022/11/17 21:59:47 by ffiliz           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub3d.h"
 
 int	ft_save(char *s, t_data *data, int indic, int array)
@@ -9,7 +21,6 @@ int	ft_save(char *s, t_data *data, int indic, int array)
 
 	i = -1;
 	nb = 1;
-	tmp = NULL;
 	while (s[++i])
 	{
 		if (ft_isdigit(s[i]) == 1)
@@ -37,7 +48,7 @@ void	ft_save_f(char *s, t_data *data)
 
 	i = 0;
 	array = 0;
-	while(s[i])
+	while (s[i])
 	{
 		if (ft_isdigit(s[i]) == 1)
 		{
@@ -89,7 +100,7 @@ void	ft_save_data(t_data *data)
 					ft_save_f(data->map[i], data);
 				if (ft_strncmp(&data->map[i][j], "C", 1) == 0)
 					ft_save_c(data->map[i], data);
-				break;
+				break ;
 			}
 			j++;
 		}
