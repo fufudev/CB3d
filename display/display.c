@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   display.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ffiliz <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/17 17:52:57 by anggonza          #+#    #+#             */
-/*   Updated: 2022/11/17 20:09:47 by anggonza         ###   ########.fr       */
+/*   Created: 2022/11/17 21:16:07 by ffiliz            #+#    #+#             */
+/*   Updated: 2022/11/17 21:18:46 by ffiliz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
 	char	*dst;
 
-	if (y > 719 || x > 1279 || y < 0 || x < 0)
+	if (x > 1279 || x < 0 || y > 719 || y < 0)
 		return ;
 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 	*(unsigned int *)dst = color;
@@ -62,8 +62,8 @@ void	window(t_data *data)
 	data->mlx_ptr = mlx_init();
 	if (!data->mlx_ptr)
 		free_map_file(data, data->map, "Error\nPB WINDOWS\n");
-	data->win_ptr = mlx_new_window(data->mlx_ptr, WINDOW_WIDTH,
-			WINDOW_HEIGHT, "CUB3D");
+	data->win_ptr
+		= mlx_new_window(data->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT, "CUB3D");
 	if (!data->win_ptr)
 		free_map_file(data, data->map, "Error\nPB WINDOWS\n");
 }
@@ -71,7 +71,7 @@ void	window(t_data *data)
 void	start_display(t_data *data)
 {
 	window(data);
-	init_img(data);
+	init_img_addr(data);
 	fov_3d(data);
 	event(data);
 }

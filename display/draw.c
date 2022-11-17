@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ffiliz <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/17 18:03:19 by anggonza          #+#    #+#             */
-/*   Updated: 2022/11/17 20:11:51 by anggonza         ###   ########.fr       */
+/*   Created: 2022/11/17 21:28:02 by ffiliz            #+#    #+#             */
+/*   Updated: 2022/11/17 21:30:38 by ffiliz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,40 +29,44 @@ void	draw_column(t_data *data, int x)
 	}
 }
 
-unsigned int	get_color(t_data *data, int x, int y, int orientation)
+void	get_color(t_data *data, int x, int y, int orientation)
 {
-	unsigned int	color;
-	double			angle;
+	int	color;
 
-	angle = data->tmp_angle;
-	if ((angle >= 0 && angle <= 180) && orientation == 0)
-		color = *(unsigned int *)(data->no_img.addr + (y * data->no_img.line
-					+ x * (data->no_img.bpp / 8)));
-	else if ((angle > 180 && angle <= 360) && orientation == 0)
-		color = *(unsigned int *)(data->so_img.addr + (y * data->so_img.line
-					+ x * (data->so_img.bpp / 8)));
-	else if ((angle >= 90 && angle <= 270) && orientation == 1)
-		color = *(unsigned int *)(data->we_img.addr + (y * data->we_img.line
-					+ x * (data->we_img.bpp / 8)));
+	if ((data->tmp_angle >= 0 && data->tmp_angle <= 180) && orientation == 0)
+	{
+		color = data->a_no[data->txt_x + data->txt_y * 64];
+		my_mlx_pixel_put(data, x, y, color);
+	}
+	else if ((data->tmp_angle > 180 && data->tmp_angle <= 360)
+		&& orientation == 0)
+	{
+		color = data->a_so[data->txt_x + data->txt_y * 64];
+		my_mlx_pixel_put(data, x, y, color);
+	}
+	else if ((data->tmp_angle >= 90 && data->tmp_angle <= 270)
+		&& orientation == 1)
+	{
+		color = data->a_we[data->txt_x + data->txt_y * 64];
+		my_mlx_pixel_put(data, x, y, color);
+	}
 	else
-		color = *(unsigned int *)(data->ea_img.addr + (y * data->ea_img.line
-					+ x * (data->ea_img.bpp / 8)));
-	return (color);
+	{
+		color = data->a_ea[data->txt_x + data->txt_y * 64];
+		my_mlx_pixel_put(data, x, y, color);
+	}
 }
 
 void	draw_texture(t_data *data, int x, int y)
 {
-	unsigned int	color;
-
 	if (data->orientation == 0)
-		data->txt_x = fmod(data->pos_x / 64.0, 1.0) * 64;
+		data->txt_x = fmod(data->pos_x / 64.0, 1.0) * 64.0;
 	if (data->orientation == 1)
-		data->txt_x = fmod(data->pos_y / 64.0, 1.0) * 64;
+		data->txt_x = fmod(data->pos_y / 64.0, 1.0) * 64.0;
 	data->txt_y = ((double)(y - data->dist_before_wall)
 			/ data->slice_height) * 64.0;
 	data->index = data->txt_x + (data->txt_y * 64.0);
-	color = get_color(data, data->txt_x, data->txt_y, data->orientation);
-	my_mlx_pixel_put(data, x, y, color);
+	get_color(data, x, y, data->orientation);
 }
 
 void	draw_3d(t_data *data, int x)

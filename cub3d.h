@@ -1,16 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/17 19:33:42 by anggonza          #+#    #+#             */
-/*   Updated: 2022/11/17 21:02:10 by anggonza         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#ifndef CUB3D_H
+# ifndef CUB3D_H
 # define CUB3D_H
 
 # include <unistd.h>
@@ -51,16 +39,6 @@ typedef struct s_point
 	double	tx;
 	double	ty;
 }	t_point;
-
-typedef struct s_img
-{
-	void	*img;
-	char	*addr;
-	int		bpp;
-	int		line;
-	int		endian;
-	int		big_len;
-}	t_img;
 
 typedef struct s_data
 {
@@ -105,14 +83,18 @@ typedef struct s_data
 	size_t	len;
 	t_point	vt;
 	t_point	hz;
-	char	*f_no;
+	char	*f_no;//FILE
 	char	*f_so;
 	char	*f_we;
 	char	*f_ea;
-	t_img	no_img;
-	t_img	so_img;
-	t_img	we_img;
-	t_img	ea_img;
+	int		*a_no;//ADRESS
+	int		*a_so;
+	int		*a_we;
+	int		*a_ea;
+	void	*no_img;//IMG
+	void	*so_img;
+	void	*we_img;
+	void	*ea_img;
 }	t_data;
 
 typedef struct s_parsing
@@ -121,110 +103,109 @@ typedef struct s_parsing
 	int	indic;
 }	t_parsing;
 
-int				txt(char *str, int text, t_data *data);
-void			find_and_draw(t_data *data);
-void			window(t_data *data);
-void			draw_rayon(t_data *data, double wall_x, double wall_y);
-void			my_mlx_pixel_put(t_data *data, int x, int y, int color);
-void			ft_putstr_fd(char *msg, int fd);
-void			ft_msg(char *msg);
-void			ft_msg_free(char **map2, char *msg);
-void			ft_check_file(t_parsing *parse, char **argv);
-void			ft_check_argument(char **argv);
-void			ft_name(char *argv);
-char			*ft_strjoin_free(char *s1, char *s2);
-void			ft_read_map(t_data *data, t_parsing *parse);
-void			start_parsing(t_data *data, t_parsing *parse, char **argv);
-void			ft_check_id(t_data *data);
-int				ft_parse_id(char *map, t_data *data);
-int				ft_is_whitespace(char c);
-int				ft_is_c_or_f(char *str, t_data *data);
-int				ft_is_whitespace(char c);
-int				ft_id_is_true(char *str, t_data *data);
-int				ft_id_is_true_part_2(char *str, t_data *data);
-void			init_id(t_data *data);
-void			ft_path_rest(char *str, t_data *data);
-void			ft_check_xpm(char *str, t_data *data);
-int				ft_path(char *str, t_data *data);
-void			ft_check_rgb(char *str, t_data *data);
-int				parse_digit(char *str, t_data *data);
-void			ft_check_value(int tmp_atoi, t_data *data);
-void			ft_check_map(char **map, t_data *data);
-int				ft_check_wall(char *map, int i, t_data *data);
-int				ft_check_line(char **map, int i, int j, t_data *data);
-void			ft_check_first_line(char *map, t_data *data);
-void			ft_check_around(char **map, int i, int j, t_data *data);
-void			ft_check_newline( char *map, t_data *data);
-void			ft_check_zero(char **map, int i, int j, t_data *data);
-void			ft_check_endline(char **map, t_data *data);
-void			ft_freesplit(char **str);
-size_t			ft_strlen2d(char **s);
-int				ft_strlen_int(const char *s);
-void			ft_check_first_last(int i, char **map, t_data *data);
-int				ft_check_middle(int i, int j, char **map, t_data *data);
-void			ft_swoosh(int *swoosh, char c, int *i);
-int				ft_wall_exist(char *s);
-void			init_value(t_data *data, int *i, int *good_value, int *indic);
-void			draw_player(t_data *data, int py, int px, int color);
-void			draw_rect(t_data *data, int x, int y, int color);
-int				is_player(char c);
-void			draw_map(char **map, t_data *data);
-void			escape(t_data *data);
-void			quit(t_data *data);
-int				closewd(t_data *data);
-void			init_value_pos(t_data *data);
-double			degree_to_radian(double degree);
-int				draw_again(t_data *data);
-void			finding_wall(t_data *data);
-void			find_horizontal_intersection(t_data *data);
-void			find_vertical_intersection(t_data *data);
-void			draw_3d(t_data *data, int x);
-void			draw_column(t_data *data, int x);
-void			find_and_draw(t_data *data);
-void			find_distance(t_data *data);
-void			window(t_data *data);
-void			start_display(t_data *data);
-void			draw_column(t_data *data, int x);
-void			event(t_data *data);
-void			find_and_draw(t_data *data);
-int				key_hook(int keycode, t_data *data);
-void			step_side(int keycode, t_data *data);
-void			right_side(t_data *data, double *x_tmp, double *y_tmp);
-void			left_side(t_data *data, double *x_tmp, double *y_tmp);
-void			up_back(int keycode, t_data *data);
-void			back(t_data *data, double *x_tmp, double *y_tmp);
-void			up(t_data *data, double *x_tmp, double *y_tmp);
-void			left_right(int keycode, t_data *data);
-void			find_distance(t_data *data);
-void			save_distance(t_data *data, double x, double y, int ort);
-void			draw_rayon(t_data *data, double wall_x, double wall_y);
-void			find_vertical_intersection(t_data *data);
-void			find_horizontal_intersection(t_data *data);
-int				check_vt_broke(t_data *data);
-int				check_hz_broke(t_data *data);
-int				ft_biglen(char **s);
-void			init_coords_vertical(t_data *data, double *xa, double *ax);
-void			init_coords_horizontal(t_data *data, double *ya, double *ay);
-double			degree_to_radian(double r);
-unsigned int	get_color(t_data *data, int x, int y, int orientation);
-int				rgb_to_int(int *tab);
-void			fov_3d(t_data *data);
-void			remove_distorsion(t_data *data);
-void			my_mlx_pixel_put(t_data *data, int x, int y, int color);
-int				ft_check_middle(int i, int j, char **map, t_data *data);
-void			ft_check_first_last(int i, char **map, t_data *data);
-int				is_player(char c);
-void			ft_save_data(t_data *data);
-void			ft_save_c(char *s, t_data *data);
-void			ft_save_f(char *s, t_data *data);
-int				ft_save(char *s, t_data *data, int indic, int array);
-void			init_img(t_data *data);
-void			free_img_filename(t_data *data);
-int				check_left_distance(t_data *data, double x_tmp, double y_tmp);
-int				check_right_distance(t_data *data, double x_tmp, double y_tmp);
-int				check_up_distance(t_data *data, double x_tmp, double y_tmp);
-int				check_back_distance(t_data *data, double x_tmp, double y_tmp);
-void			free_map_file(t_data *data, char **map, char *msg);
-void			init_player(t_data *data, int i, int j);
+int		txt(char *str, int text, t_data *data);
+void	find_and_draw(t_data *data);
+void	window(t_data *data);
+void	draw_rayon(t_data *data, double wall_x, double wall_y);
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void	ft_putstr_fd(char *msg, int fd);
+void	ft_msg(char *msg);
+void	ft_msg_free(char **map2, char *msg);
+void	ft_check_file(t_parsing *parse, char **argv);
+void	ft_check_argument(char **argv);
+void	ft_name(char *argv);
+char	*ft_strjoin_free(char *s1, char *s2);
+void	ft_read_map(t_data *data, t_parsing *parse);
+void	start_parsing(t_data *data, t_parsing *parse, char **argv);
+void	ft_check_id(t_data *data);
+int		ft_parse_id(char *map, t_data *data);
+int		ft_is_whitespace(char c);
+int		ft_is_c_or_f(char *str, t_data *data);
+int		ft_is_whitespace(char c);
+int		ft_id_is_true(char *str, t_data *data);
+int		ft_id_is_true_part_2(char *str, t_data *data);
+void	init_id(t_data *data);
+void	ft_path_rest(char *str, t_data *data);
+void	ft_check_xpm(char *str, t_data *data);
+int		ft_path(char *str, t_data *data);
+void	ft_check_rgb(char *str, t_data *data);
+int		parse_digit(char *str, t_data *data);
+void	ft_check_value(int tmp_atoi, t_data *data);
+void	ft_check_map(char **map, t_data *data);
+int		ft_check_wall(char *map, int i, t_data *data);
+int		ft_check_line(char **map, int i, int j, t_data *data);
+void	ft_check_first_line(char *map, t_data *data);
+void	ft_check_around(char **map, int i, int j, t_data *data);
+void	ft_check_newline( char *map, t_data *data);
+void	ft_check_zero(char **map, int i, int j, t_data *data);
+void	ft_check_endline(char **map, t_data *data);
+void	ft_freesplit(char **str);
+size_t	ft_strlen2d(char **s);
+int		ft_strlen_int(const char *s);
+void	ft_check_first_last(int i, char **map, t_data *data);
+int		ft_check_middle(int i, int j, char **map, t_data *data);
+void	ft_swoosh(int *swoosh, char c, int *i);
+int		ft_wall_exist(char *s);
+void	init_value(t_data *data, int *i, int *good_value, int *indic);
+void	draw_player(t_data *data, int py, int px, int color);
+void	draw_rect(t_data *data, int x, int y, int color);
+int		is_player(char c);
+void	draw_map(char **map, t_data *data);
+void	escape(t_data *data);
+void	quit(t_data *data);
+int		closewd(t_data *data);
+void	init_value_pos(t_data *data);
+double	degree_to_radian(double degree);
+int		draw_again(t_data *data);
+void	finding_wall(t_data *data);
+void	find_horizontal_intersection(t_data *data);
+void	find_vertical_intersection(t_data *data);
+void	draw_3d(t_data *data, int x);
+void	draw_column(t_data *data, int x);
+void	find_and_draw(t_data *data);
+void	find_distance(t_data *data);
+void	window(t_data *data);
+void	start_display(t_data *data);
+void	draw_column(t_data *data, int x);
+void	event(t_data *data);
+void	find_and_draw(t_data *data);
+int		key_hook(int keycode, t_data *data);
+void	step_side(int keycode, t_data *data);
+void	right_side(t_data *data, double *x_tmp, double *y_tmp);
+void	left_side(t_data *data, double *x_tmp, double *y_tmp);
+void	up_back(int keycode, t_data *data);
+void	back(t_data *data, double *x_tmp, double *y_tmp);
+void	up(t_data *data, double *x_tmp, double *y_tmp);
+void	left_right(int keycode, t_data *data);
+void	find_distance(t_data *data);
+void	save_distance(t_data *data, double x, double y, int orientation);
+void	draw_rayon(t_data *data, double wall_x, double wall_y);
+void	find_vertical_intersection(t_data *data);
+void	find_horizontal_intersection(t_data *data);
+int		check_vt_broke(t_data *data);
+int		check_hz_broke(t_data *data);
+int		ft_biglen(char **s);
+void	init_coordinates_vertical(t_data *data, double *xa, double *ax);
+void	init_coordinates_horizontal(t_data *data, double *ya, double *ay);
+double	degree_to_radian(double r);
+void	get_color(t_data *data, int x, int y, int orientation);
+int		rgb_to_int(int *tab);
+void	fov_3d(t_data *data);
+void	remove_distorsion(t_data *data);
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+int		ft_check_middle(int i, int j, char **map, t_data *data);
+void	ft_check_first_last(int i, char **map, t_data *data);
+int		is_player(char c);
+void	ft_save_data(t_data *data);
+void	ft_save_c(char *s, t_data *data);
+void	ft_save_f(char *s, t_data *data);
+int		ft_save(char *s, t_data *data, int indic, int array);
+void	init_img_addr(t_data *data);
+void	free_img_filename(t_data *data);
+int		check_left_distance(t_data *data, double x_tmp, double y_tmp);
+int		check_right_distance(t_data *data, double x_tmp, double y_tmp);
+int		check_up_distance(t_data *data, double x_tmp, double y_tmp);
+int		check_back_distance(t_data *data, double x_tmp, double y_tmp);
+void	free_map_file(t_data *data, char **map, char *msg);
 
 #endif

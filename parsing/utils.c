@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ffiliz <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 11:35:57 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/17 19:49:22 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/07/15 11:36:27 by ffiliz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,11 @@ void	free_map_file(t_data *data, char **map, char *msg)
 		free(data->f_so);
 	if (data->f_no)
 		free(data->f_no);
-	data->f_ea = NULL;
-	data->f_we = NULL;
-	data->f_so = NULL;
-	data->f_no = NULL;
+	exit(EXIT_FAILURE);
+}
+
+void	ft_msg(char *msg)
+{
+	ft_putstr_fd(msg, 2);
 	exit(EXIT_FAILURE);
 }

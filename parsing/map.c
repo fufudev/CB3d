@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ffiliz <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 11:35:08 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/17 19:42:00 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/07/15 11:35:42 by ffiliz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	ft_check_newline(char *map, t_data *data)
 				{
 					if (map[i] == '\n')
 						data->newline++;
-				}
+				}			
 			}
 		}
 	}
@@ -88,7 +88,7 @@ void	ft_check_map(char **map, t_data *data)
 				continue ;
 			if (i != 0 && i != (int)ft_strlen2d(map) - 1)
 				if (ft_check_line(map, i, j, data) == 1)
-					free_map_file(data, data->map, "Error\nWrong char.\n");
+					free_map_file(data, data->map, "Error\nIn the map you have a wrong alpha.\n");
 			if (wall == 0 && ft_check_wall(map[i], j, data) == 0)
 				wall = 1;
 		}
@@ -101,11 +101,9 @@ int	ft_check_wall(char *map, int i, t_data *data)
 
 	len = ft_strlen(map);
 	if (map[i] != '1')
-		free_map_file(data, data->map,
-			"Error\nYou have space after the wall and nothing behind\n");
+		free_map_file(data, data->map, "Error\nYou have space after the wall and nothing behind. Delete it !\n");
 	if (map[len - 1] != '1')
-		free_map_file(data, data->map,
-			"Error\nYou have space after the wall and nothing behind\n");
+		free_map_file(data, data->map, "Error\nYou have space after the wall and nothing behind. Delete it !\n");
 	return (0);
 }
 
@@ -122,3 +120,4 @@ int	ft_wall_exist(char *s)
 	}
 	return (0);
 }
+

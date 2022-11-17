@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   distance.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ffiliz <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/17 17:56:18 by anggonza          #+#    #+#             */
-/*   Updated: 2022/11/17 21:02:14 by anggonza         ###   ########.fr       */
+/*   Created: 2022/11/17 21:18:52 by ffiliz            #+#    #+#             */
+/*   Updated: 2022/11/17 21:27:55 by ffiliz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	find_horizontal_intersection(t_data *d)
 {
-	init_coords_horizontal(d, &d->hz.ya, &d->hz.ay);
+	init_coordinates_horizontal(d, &d->hz.ya, &d->hz.ay);
 	d->hz.xa = -(d->hz.ya) / tan(degree_to_radian(d->tmp_angle));
 	d->hz.ty = d->hz.ay;
 	d->hz.tx = d->player_x + (d->player_y - d->hz.ay)
@@ -39,7 +39,7 @@ void	find_horizontal_intersection(t_data *d)
 
 void	find_vertical_intersection(t_data *d)
 {
-	init_coords_vertical(d, &d->vt.xa, &d->vt.ax);
+	init_coordinates_vertical(d, &d->vt.xa, &d->vt.ax);
 	d->vt.ya = -(d->vt.xa) * tan(degree_to_radian(d->tmp_angle));
 	d->vt.ty = d->player_y + (d->player_x - d->vt.ax)
 		* tan(degree_to_radian(d->tmp_angle));
@@ -49,7 +49,7 @@ void	find_vertical_intersection(t_data *d)
 	while (d->s_map[(int)floor(d->vt.ty / 64)][(int)floor(d->vt.tx / 64)] != '1'
 		&& d->s_map[(int)floor(d->vt.ty / 64)][(int)floor(d->vt.tx / 64)] != ' '
 		&& d->s_map[(int)floor(d->vt.ty / 64)]
-			[(int)floor(d->vt.tx / 64)] != '\0')
+		[(int)floor(d->vt.tx / 64)] != '\0')
 	{
 		d->vt.ay = d->player_y + (d->player_x - d->vt.ax)
 			* tan(degree_to_radian(d->tmp_angle));
@@ -76,7 +76,7 @@ void	find_distance(t_data *data)
 	double	dist_vt;
 
 	get_sqrt(data, &dist_hz, &dist_vt);
-	if (dist_hz == 0.0 || dist_vt <= dist_hz)
+	if (dist_hz == 0.0 || dist_vt < dist_hz)
 	{
 		data->distance = dist_vt;
 		save_distance(data, data->vt.tx, data->vt.ty, 1);

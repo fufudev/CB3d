@@ -6,13 +6,13 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 11:34:25 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/17 21:02:18 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/17 21:36:04 by ffiliz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
-void	init_coords_horizontal(t_data *data, double *ya, double *ay)
+void	init_coordinates_horizontal(t_data *data, double *ya, double *ay)
 {
 	if (data->tmp_angle >= 0.0 && data->tmp_angle < 180.0)
 	{
@@ -26,7 +26,7 @@ void	init_coords_horizontal(t_data *data, double *ya, double *ay)
 	}
 }
 
-void	init_coords_vertical(t_data *data, double *xa, double *ax)
+void	init_coordinates_vertical(t_data *data, double *xa, double *ax)
 {
 	if ((data->tmp_angle >= 0.0 && data->tmp_angle <= 90.0)
 		|| (data->tmp_angle >= 270.0 && data->tmp_angle <= 360.0))
@@ -64,39 +64,40 @@ void	init_value(t_data *data, int *i, int *good_value, int *indic)
 	data->f_ea = NULL;
 }
 
-void	init_img_addr(t_data *data)
+void	init_img_addr_2(t_data *data)
 {
-	data->no_img.addr = mlx_get_data_addr(data->no_img.img, &data->no_img.bpp,
-			&data->no_img.line, &data->no_img.endian);
-	data->so_img.addr = mlx_get_data_addr(data->so_img.img, &data->so_img.bpp,
-			&data->so_img.line, &data->so_img.endian);
-	data->we_img.addr = mlx_get_data_addr(data->we_img.img, &data->we_img.bpp,
-			&data->we_img.line, &data->we_img.endian);
-	data->ea_img.addr = mlx_get_data_addr(data->ea_img.img, &data->ea_img.bpp,
-			&data->ea_img.line, &data->ea_img.endian);
+	data->a_so = (int *)mlx_get_data_addr(data->so_img,
+			&data->bits_per_pixel, &data->line_length, &data->endian);
+	data->a_we = (int *)mlx_get_data_addr(data->we_img,
+			&data->bits_per_pixel, &data->line_length, &data->endian);
+	data->a_ea = (int *)mlx_get_data_addr(data->ea_img,
+			&data->bits_per_pixel, &data->line_length, &data->endian);
+	data->a_no = (int *)mlx_get_data_addr(data->no_img,
+			&data->bits_per_pixel, &data->line_length, &data->endian);
 }
 
-void	init_img(t_data *data)
+void	init_img_addr(t_data *data)
 {
 	int	width;
 	int	height;
 
-	data->no_img.img = mlx_xpm_file_to_image(data->mlx_ptr, data->f_no,
-			&width, &height);
-	if (!data->no_img.img)
+	data->no_img = mlx_xpm_file_to_image(data->mlx_ptr,
+			data->f_no, &width, &height);
+	if (!data->no_img)
+		free_map_file(data, data->map,
+			"Error\nProbleme xpm file to img\n");
+	data->so_img = mlx_xpm_file_to_image(data->mlx_ptr,
+			data->f_so, &width, &height);
+	if (!data->no_img)
 		free_map_file(data, data->map, "Error\nProbleme xpm file to img\n");
-	data->so_img.img = mlx_xpm_file_to_image(data->mlx_ptr, data->f_so,
-			&width, &height);
-	if (!data->so_img.img)
+	data->we_img = mlx_xpm_file_to_image(data->mlx_ptr,
+			data->f_we, &width, &height);
+	if (!data->no_img)
 		free_map_file(data, data->map, "Error\nProbleme xpm file to img\n");
-	data->we_img.img = mlx_xpm_file_to_image(data->mlx_ptr, data->f_we,
-			&width, &height);
-	if (!data->we_img.img)
-		free_map_file(data, data->map, "Error\nProbleme xpm file to img\n");
-	data->ea_img.img = mlx_xpm_file_to_image(data->mlx_ptr, data->f_ea,
-			&width, &height);
-	if (!data->ea_img.img)
+	data->ea_img = mlx_xpm_file_to_image(data->mlx_ptr,
+			data->f_ea, &width, &height);
+	if (!data->no_img)
 		free_map_file(data, data->map, "Error\nProbleme xpm file to img\n");
 	free_img_filename(data);
-	init_img_addr(data);
+	init_img_addr_2(data);
 }
