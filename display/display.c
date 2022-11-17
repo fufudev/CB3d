@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   display.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/11/17 17:52:57 by anggonza          #+#    #+#             */
+/*   Updated: 2022/11/17 17:53:11 by anggonza         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub3d.h"
 
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
@@ -10,7 +22,7 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 
 void	event(t_data *data)
 {
-	mlx_hook(data->win_ptr, 2, 0, key_hook, data); // CHANGEZ KEYPRESS KEYPRESSMASK par 2 et 0
+	mlx_hook(data->win_ptr, 2, 0, key_hook, data);
 	mlx_hook(data->win_ptr, 17, 0, closewd, data);
 	mlx_loop(data->mlx_ptr);
 }
@@ -48,7 +60,8 @@ void	window(t_data *data)
 	data->mlx_ptr = mlx_init();
 	if (!data->mlx_ptr)
 		free_map_file(data, data->map, "Error\nPB WINDOWS\n");
-	data->win_ptr = mlx_new_window(data->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT, "CUB3D");
+	data->win_ptr = mlx_new_window(data->mlx_ptr, WINDOW_WIDTH,
+			WINDOW_HEIGHT, "CUB3D");
 	if (!data->win_ptr)
 		free_map_file(data, data->map, "Error\nPB WINDOWS\n");
 }
@@ -58,6 +71,5 @@ void	start_display(t_data *data)
 	window(data);
 	init_img_addr(data);
 	fov_3d(data);
-	//find_and_draw(data);
 	event(data);
 }

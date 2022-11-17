@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   draw.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/11/17 18:03:19 by anggonza          #+#    #+#             */
+/*   Updated: 2022/11/17 18:03:20 by anggonza         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub3d.h"
 
 int	rgb_to_int(int *tab)
@@ -50,7 +62,7 @@ void	draw_texture(t_data *data, int x, int y)
 	if (data->orientation == 1)
 		data->txt_x = fmod(data->pos_y / 64.0, 1.0) * 64.0;
 	data->txt_y = ((double)(y - data->dist_before_wall)
-		/ data->slice_height) * 64.0;
+				/ data->slice_height) * 64.0;
 	data->index = data->txt_x + (data->txt_y * 64.0);
 	get_color(data, x, y, data->orientation);
 }
