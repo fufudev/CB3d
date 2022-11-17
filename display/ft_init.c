@@ -6,13 +6,13 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 11:34:25 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/17 19:40:13 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/17 21:02:18 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
-void	init_coords__horizontal(t_data *data, double *ya, double *ay)
+void	init_coords_horizontal(t_data *data, double *ya, double *ay)
 {
 	if (data->tmp_angle >= 0.0 && data->tmp_angle < 180.0)
 	{
@@ -26,7 +26,7 @@ void	init_coords__horizontal(t_data *data, double *ya, double *ay)
 	}
 }
 
-void	init_coords__vertical(t_data *data, double *xa, double *ax)
+void	init_coords_vertical(t_data *data, double *xa, double *ax)
 {
 	if ((data->tmp_angle >= 0.0 && data->tmp_angle <= 90.0)
 		|| (data->tmp_angle >= 270.0 && data->tmp_angle <= 360.0))

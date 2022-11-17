@@ -6,7 +6,7 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 19:33:42 by anggonza          #+#    #+#             */
-/*   Updated: 2022/11/17 19:40:13 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/17 21:02:10 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,8 +203,8 @@ void			find_horizontal_intersection(t_data *data);
 int				check_vt_broke(t_data *data);
 int				check_hz_broke(t_data *data);
 int				ft_biglen(char **s);
-void			init_coords__vertical(t_data *data, double *xa, double *ax);
-void			init_coords__horizontal(t_data *data, double *ya, double *ay);
+void			init_coords_vertical(t_data *data, double *xa, double *ax);
+void			init_coords_horizontal(t_data *data, double *ya, double *ay);
 double			degree_to_radian(double r);
 unsigned int	get_color(t_data *data, int x, int y, int orientation);
 int				rgb_to_int(int *tab);
