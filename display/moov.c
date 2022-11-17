@@ -1,26 +1,38 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   moov.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/11/17 19:20:38 by anggonza          #+#    #+#             */
+/*   Updated: 2022/11/17 19:20:39 by anggonza         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub3d.h"
 
 void	left_right(int keycode, t_data *data)
 {
 	if (keycode == LEFT)
 	{
-		if (data->player_angle + 3 > 360)
+		if (data->player_angle + 5 > 360)
 		{
 			data->player_angle = 0;
-			data->player_angle += 3;
+			data->player_angle += 5;
 		}
 		else
-			data->player_angle += 3;
+			data->player_angle += 5;
 	}
 	if (keycode == RIGHT)
 	{
-		if (data->player_angle - 3 < 0)
+		if (data->player_angle - 5 < 0)
 		{
 			data->player_angle = 360;
-			data->player_angle -= 3;
+			data->player_angle -= 5;
 		}
 		else
-			data->player_angle -= 3;
+			data->player_angle -= 5;
 	}
 }
 

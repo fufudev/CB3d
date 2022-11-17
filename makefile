@@ -1,5 +1,5 @@
 CC	= gcc
-CFLAGS = -Wall -Werror -Wextra -g -fsanitize=address
+CFLAGS = -Wall -Werror -Wextra
 LDFLAG = -Lmlx -framework OpenGL -framework AppKit
 #LDFLAG = -Lmlx_linux
 NAME = cub3d
@@ -12,6 +12,7 @@ SRC =	parsing/parsing.c	    	\
 		main.c			        	\
 		parsing/utils.c				\
 		parsing/utils2.c			\
+		parsing/utils3.c			\
 		parsing/ft_check.c			\
 		parsing/map.c				\
 		parsing/ft_id_check.c		\
@@ -38,7 +39,7 @@ $(L_FT)/libft.a:
 	make -C $(L_FT)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -g -o  $@ -c $< -I$(I_DIR)
+	$(CC) $(CFLAGS) -o  $@ -c $< -I$(I_DIR)
 
 clean:
 	make clean -C $(L_FT)

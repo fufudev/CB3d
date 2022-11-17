@@ -6,7 +6,7 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 10:49:24 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/16 11:32:40 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/17 19:54:57 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,10 @@ void	start_parsing(t_data *data, t_parsing *parse, char **argv)
 	ft_check_file(parse, argv);
 	ft_read_map(data, parse);
 	ft_check_id(data);
+	int	i = 0;
+	while (data->s_map[i])
+		printf("%s\n", data->s_map[i++]);
+
 	ft_save_data(data);
 }
 

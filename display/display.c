@@ -6,7 +6,7 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:52:57 by anggonza          #+#    #+#             */
-/*   Updated: 2022/11/17 17:53:11 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/17 19:20:06 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
 	char	*dst;
 
+	if (y > 719 || x > 1279 || y < 0 || x < 0)
+		return ;
 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 	*(unsigned int *)dst = color;
 }
@@ -48,7 +50,7 @@ void	fov_3d(t_data *data)
 		find_horizontal_intersection(data);
 		find_distance(data);
 		remove_distorsion(data);
-		draw_3D(data, x);
+		draw_3d(data, x);
 		data->tmp_angle = data->tmp_angle - 0.046875;
 		x++;
 	}
@@ -69,7 +71,7 @@ void	window(t_data *data)
 void	start_display(t_data *data)
 {
 	window(data);
-	init_img_addr(data);
+	init_img(data);
 	fov_3d(data);
 	event(data);
 }

@@ -1,12 +1,13 @@
 
 
 
-SO xpm/Spatial1.xpm                                                     
-NO xpm/Spatial2.xpm                  
-WE xpm/Spatial3.xpm                                                                                                         
-EA xpm/Spatial4.xpm                         
+SO xpm/Spatial2.xpm
+NO xpm/Spatial2.xpm
+WE xpm/Spatial2.xpm
+EA xpm/Spatial2.xpm
 F 122,0,255
 C 255,255,255
+
 111111111111111
 100000000000001
 100000000000001
