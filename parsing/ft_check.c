@@ -6,7 +6,7 @@
 /*   By: ffiliz <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 11:12:10 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/07/15 11:14:53 by ffiliz           ###   ########.fr       */
+/*   Updated: 2022/11/17 21:55:01 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ void	ft_check_around(char **map, int i, int j, t_data *data)
 		>= ft_strlen_int(map[i]))
 		if (map[i + 1][j] != '1' && ft_is_whitespace(map[i + 1][j]) != 1)
 			ft_msg_free(data->map, "Error\nMap not close 1.\n");
-	if (i != 0 && map[i - 1] && ft_strlen_int(map[i - 1]) >= ft_strlen_int(map[i]))
+	if (i != 0 && map[i - 1] && ft_strlen_int(map[i - 1])
+		>= ft_strlen_int(map[i]))
 		if (map[i - 1][j] != '1' && ft_is_whitespace(map[i - 1][j]) != 1)
 			ft_msg_free(data->map, "Error\nMap not close 2.\n");
 	if (map[i] && j != (int)ft_strlen_int(map[i]) && map[i][j + 1])
@@ -60,13 +61,13 @@ void	ft_check_first_line(char *map, t_data *data)
 		if (map[i] == '1')
 			continue ;
 		else
-			ft_msg_free(data->map, "Error\nYou have space after the wall and nothing behind. Delete it !\n");
+			ft_msg_free(data->map, "Error\nSpace after the wall\n");
 	}
 	i = ft_strlen_int(map) - 1;
 	while (i > 0)
 	{
 		if (ft_is_whitespace(map[i]) == 1)
-			ft_msg_free(data->map, "Error\nYou have space after the wall and nothing behind ! Its should be on the first or last line. Delete it !\n");
+			ft_msg_free(data->map, "Error\nSpace after the wall\n");
 		if (map[i] == '1')
 			break ;
 		i--;
@@ -78,11 +79,7 @@ int	ft_check_line(char **map, int i, int j, t_data *data)
 	if ((map[i][j] == 'N' || map[i][j] == 'S'
 		|| map[i][j] == 'E' || map[i][j] == 'W') && data->indic == 0)
 	{
-		data->pos_y = i;
-		data->pos_x = j;
-		data->player_y = i * 64 + 32;
-		data->player_x = j * 64 + 32;
-		data->indic = 1;
+		init_positionn(data, i, j);
 		if (map[i][j] == 'N')
 			data->player_angle = NORTH;
 		if (map[i][j] == 'S')
