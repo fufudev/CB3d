@@ -78,6 +78,9 @@ void	ft_check_map(char **map, t_data *data)
 	ft_check_endline(map, data);
 	data->s_map = map;
 	ft_replace_space_by_one(data);
+	int k = 0;
+	while(data->s_map[k])
+		printf("%s\n", data->s_map[k++]);
 	while (map[++i])
 	{
 		j = -1;
