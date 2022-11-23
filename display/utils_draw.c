@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_draw.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffiliz <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 21:59:56 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/17 22:01:42 by ffiliz           ###   ########.fr       */
+/*   Updated: 2022/11/23 09:31:43 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@ int	check_vt_broke(t_data *data)
 {
 	if (!(floor(data->vt.ty / 64.0)
 			>= 0 && floor(data->vt.ty / 64.0) < ft_strlen2d(data->s_map) - 1))
+		return (1);
+	if (floor(data->vt.tx / 64.0) > ft_strlen(data->s_map[(int)
+				floor(data->vt.ty / 64.0)]))
 		return (1);
 	return (0);
 }

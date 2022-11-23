@@ -3,25 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   ft_id_check_2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffiliz <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 11:33:39 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/07/15 11:33:41 by ffiliz           ###   ########.fr       */
+/*   Updated: 2022/11/23 09:06:06 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
-int	ft_is_c_or_f(char *str, t_data *data)
+void	ft_replace_space_by_one(t_data *data)
 {
 	int	i;
+	int	j;
 
 	i = 0;
-	if ((str[i] == 'F' || str[i] == 'C') && str[i + 1] == ' ')
-		return (1);
-	else
-		ft_msg_free(data->map, "Error\nMap incorrect.\n");
-	return (0);
+	j = 0;
+	while (data->s_map[i])
+	{
+		while (data->s_map[i][j])
+		{
+			if (data->s_map[i][j] == ' ')
+				data->s_map[i][j] = '1';
+			j++;
+		}
+		j = 0;
+		i++;
+	}
 }
 
 void	ft_check_value(int tmp_atoi, t_data *data)

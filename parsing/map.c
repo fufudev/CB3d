@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffiliz <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 11:35:08 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/17 22:02:52 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/23 09:30:46 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	ft_check_newline(char *map, t_data *data)
 				{
 					if (map[i] == '\n')
 						data->newline++;
-				}			
+				}
 			}
 		}
 	}
@@ -77,6 +77,7 @@ void	ft_check_map(char **map, t_data *data)
 	data->indic = 0;
 	ft_check_endline(map, data);
 	data->s_map = map;
+	ft_replace_space_by_one(data);
 	while (map[++i])
 	{
 		j = -1;

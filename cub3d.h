@@ -6,7 +6,7 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 21:53:19 by anggonza          #+#    #+#             */
-/*   Updated: 2022/11/17 21:56:41 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/23 09:05:58 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,6 @@ void	start_parsing(t_data *data, t_parsing *parse, char **argv);
 void	ft_check_id(t_data *data);
 int		ft_parse_id(char *map, t_data *data);
 int		ft_is_whitespace(char c);
-int		ft_is_c_or_f(char *str, t_data *data);
 int		ft_is_whitespace(char c);
 int		ft_id_is_true(char *str, t_data *data);
 int		ft_id_is_true_part_2(char *str, t_data *data);
@@ -150,6 +149,7 @@ void	ft_check_around(char **map, int i, int j, t_data *data);
 void	ft_check_newline( char *map, t_data *data);
 void	ft_check_zero(char **map, int i, int j, t_data *data);
 void	ft_check_endline(char **map, t_data *data);
+void	ft_replace_space_by_one(t_data *data);
 void	ft_freesplit(char **str);
 size_t	ft_strlen2d(char **s);
 int		ft_strlen_int(const char *s);
