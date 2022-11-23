@@ -6,7 +6,7 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 11:35:08 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/11/23 09:30:46 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/23 10:44:07 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	ft_read_map(t_data *data, t_parsing *parse)
 		buf[r] = '\0';
 		line = ft_strjoin_free(line, buf);
 	}
-	if (!line[0])
+	if (!line || !line[0])
 	{
 		free(line);
 		ft_msg("Error\nMap is empty.\n");
@@ -78,9 +78,6 @@ void	ft_check_map(char **map, t_data *data)
 	ft_check_endline(map, data);
 	data->s_map = map;
 	ft_replace_space_by_one(data);
-	int k = 0;
-	while(data->s_map[k])
-		printf("%s\n", data->s_map[k++]);
 	while (map[++i])
 	{
 		j = -1;
@@ -105,9 +102,9 @@ int	ft_check_wall(char *map, int i, t_data *data)
 
 	len = ft_strlen(map);
 	if (map[i] != '1')
-		free_map_file(data, data->map, "Error\nSpace after the wall\n");
+		free_map_file(data, data->map, "Error\nCheck Wall\n");
 	if (map[len - 1] != '1')
-		free_map_file(data, data->map, "Error\nSpace after the wall\n");
+		free_map_file(data, data->map, "Error\nCheck Wall\n");
 	return (0);
 }
 

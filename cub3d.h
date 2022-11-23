@@ -6,7 +6,7 @@
 /*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 21:53:19 by anggonza          #+#    #+#             */
-/*   Updated: 2022/11/23 09:05:58 by anggonza         ###   ########.fr       */
+/*   Updated: 2022/11/23 10:38:59 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ void	ft_check_newline( char *map, t_data *data);
 void	ft_check_zero(char **map, int i, int j, t_data *data);
 void	ft_check_endline(char **map, t_data *data);
 void	ft_replace_space_by_one(t_data *data);
+void	check_overflow_map(t_data *data, int i, int j);
 void	ft_freesplit(char **str);
 size_t	ft_strlen2d(char **s);
 int		ft_strlen_int(const char *s);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffiliz <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: anggonza <anggonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 11:37:03 by ffiliz            #+#    #+#             */
-/*   Updated: 2022/07/15 11:37:57 by ffiliz           ###   ########.fr       */
+/*   Updated: 2022/11/23 10:28:55 by anggonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ void	ft_name(char *argv)
 	int	i;
 
 	i = ft_strlen(argv) - 1;
+	if (i < 4)
+		ft_msg("Error\nExtension of the file is incorrect\n");
 	if (argv[i] != 'b')
 		ft_msg("Error\nExtension of the file is incorrect\n");
 	if (argv[i - 1] != 'u')
